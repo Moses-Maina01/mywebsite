@@ -27,6 +27,11 @@ nav{
     width:250px;
     padding:30px;
     border-radius:15px;
+    .card:hover{
+    transform:scale(1.05);
+    transition:0.3s;
+    background:#334155;
+}
     text-align:center;
 }
 
