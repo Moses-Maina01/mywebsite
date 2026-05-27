@@ -196,3 +196,21 @@ a{
     font-weight:bold;
     margin-top:10px;
 }
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    background:white;
+}
+
+table th,
+table td{
+    padding:15px;
+    border:1px solid #ddd;
+    text-align:left;
+}
+
+table th{
+    background:#1e293b;
+    color:white;
+}
