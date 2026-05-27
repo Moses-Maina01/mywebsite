@@ -253,3 +253,46 @@ table th{
 .enter-btn:hover{
     background:#334155;
 }
+.login-body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background:#0f172a;
+}
+
+.login-box{
+    background:white;
+    padding:40px;
+    width:350px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.2);
+    text-align:center;
+}
+
+.login-box h1{
+    margin-bottom:30px;
+    color:#1e293b;
+}
+
+.login-box input{
+    width:100%;
+    padding:12px;
+    margin-bottom:20px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.login-btn{
+    display:block;
+    background:#1e293b;
+    color:white;
+    padding:12px;
+    border-radius:8px;
+    text-decoration:none;
+}
+
+.login-btn:hover{
+    background:#334155;
+}
