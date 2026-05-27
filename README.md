@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>My First Website</title>
+<title>CITY SHUTTLE</title>
 </head>
 
 <body>
 
-<h1>Hello Nova</h1>
-<p>My website is now working.</p>
+<h1>WELCOME</h1>
+<p>TO THE NEW BEGINNING.</p>
 
 </body>
 </html>
