@@ -30,21 +30,22 @@
 
     <h2>Add Vehicle</h2>
 
-    <input type="text" placeholder="Vehicle Number">
+    <input type="text" id="vehicleNumber" placeholder="Vehicle Number">
 
-    <input type="text" placeholder="Driver Name">
+    <input type="text" id="driverName" placeholder="Driver Name">
 
-    <select>
+    <select id="vehicleStatus">
       <option>Active</option>
       <option>Service</option>
       <option>Inactive</option>
     </select>
 
-    <button>Add Vehicle</button>
+    <button onclick="addVehicle()">Add Vehicle</button>
 
   </div>
 
-  <table>
+  <table id="vehicleTable">
+
     <tr>
       <th>Vehicle</th>
       <th>Driver</th>
@@ -57,21 +58,42 @@
       <td>Active</td>
     </tr>
 
-    <tr>
-      <td>118</td>
-      <td>John</td>
-      <td>Service</td>
-    </tr>
-
-    <tr>
-      <td>119</td>
-      <td>Peter</td>
-      <td>Active</td>
-    </tr>
-
   </table>
 
 </div>
+
+<script>
+
+function addVehicle(){
+
+    let vehicle =
+    document.getElementById("vehicleNumber").value;
+
+    let driver =
+    document.getElementById("driverName").value;
+
+    let status =
+    document.getElementById("vehicleStatus").value;
+
+    let table =
+    document.getElementById("vehicleTable");
+
+    let row = table.insertRow();
+
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(1);
+    let cell3 = row.insertCell(2);
+
+    cell1.innerHTML = vehicle;
+    cell2.innerHTML = driver;
+    cell3.innerHTML = status;
+
+    document.getElementById("vehicleNumber").value = "";
+    document.getElementById("driverName").value = "";
+
+}
+
+</script>
 
 </body>
 </html>
