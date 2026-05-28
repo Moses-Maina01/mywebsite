@@ -23,8 +23,90 @@
 </div>
 
 <div class="main">
-  <h1>Attendance Page</h1>
+
+  <h1>Attendance Management</h1>
+
+  <div class="form-box">
+
+    <h2>Add Attendance</h2>
+
+    <input type="text" id="attendanceDriver" placeholder="Driver Name">
+
+    <input type="text" id="attendanceVehicle" placeholder="Vehicle Number">
+
+    <select id="attendanceStatus">
+      <option>Present</option>
+      <option>Absent</option>
+      <option>Off Duty</option>
+    </select>
+
+    <input type="date" id="attendanceDate">
+
+    <button onclick="addAttendance()">Add Attendance</button>
+
+  </div>
+
+  <table id="attendanceTable">
+
+    <tr>
+      <th>Driver</th>
+      <th>Vehicle</th>
+      <th>Status</th>
+      <th>Date</th>
+    </tr>
+
+    <tr>
+      <td>Maina</td>
+      <td>116</td>
+      <td>Present</td>
+      <td>2026-05-28</td>
+    </tr>
+
+  </table>
+
 </div>
+
+<script>
+
+function addAttendance(){
+
+    let driver =
+    document.getElementById("attendanceDriver").value;
+
+    let vehicle =
+    document.getElementById("attendanceVehicle").value;
+
+    let status =
+    document.getElementById("attendanceStatus").value;
+
+    let date =
+    document.getElementById("attendanceDate").value;
+
+    if(driver === "" || vehicle === "" || date === ""){
+
+        alert("Please fill all fields");
+
+        return;
+    }
+
+    let table =
+    document.getElementById("attendanceTable");
+
+    let row =
+    table.insertRow();
+
+    row.insertCell(0).innerHTML = driver;
+    row.insertCell(1).innerHTML = vehicle;
+    row.insertCell(2).innerHTML = status;
+    row.insertCell(3).innerHTML = date;
+
+    document.getElementById("attendanceDriver").value = "";
+    document.getElementById("attendanceVehicle").value = "";
+    document.getElementById("attendanceDate").value = "";
+
+}
+
+</script>
 
 </body>
 </html>
