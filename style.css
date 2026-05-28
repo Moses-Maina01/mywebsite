@@ -354,3 +354,9 @@ table th{
     background:#1e293b;
     color:white;
 }
+.main{
+    margin-left:270px;
+    padding:20px;
+    width:100%;
+    overflow-x:auto;
+}
