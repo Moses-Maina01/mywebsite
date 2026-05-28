@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Fuel</title>
+  <title>Fuel Management</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -23,8 +23,87 @@
 </div>
 
 <div class="main">
-  <h1>Fuel Page</h1>
+
+  <h1>Fuel Management</h1>
+
+  <div class="form-box">
+
+    <h2>Add Fuel Record</h2>
+
+    <input type="text" id="fuelVehicle" placeholder="Vehicle Number">
+
+    <input type="number" id="fuelLitres" placeholder="Litres">
+
+    <input type="number" id="fuelCost" placeholder="Fuel Cost">
+
+    <input type="date" id="fuelDate">
+
+    <button onclick="addFuel()">Add Fuel</button>
+
+  </div>
+
+  <table id="fuelTable">
+
+    <tr>
+      <th>Vehicle</th>
+      <th>Litres</th>
+      <th>Cost</th>
+      <th>Date</th>
+    </tr>
+
+    <tr>
+      <td>116</td>
+      <td>50</td>
+      <td>KES 8,000</td>
+      <td>2026-05-28</td>
+    </tr>
+
+  </table>
+
 </div>
+
+<script>
+
+function addFuel(){
+
+    let vehicle =
+    document.getElementById("fuelVehicle").value;
+
+    let litres =
+    document.getElementById("fuelLitres").value;
+
+    let cost =
+    document.getElementById("fuelCost").value;
+
+    let date =
+    document.getElementById("fuelDate").value;
+
+    if(vehicle === "" || litres === "" || cost === "" || date === ""){
+
+        alert("Please fill all fields");
+
+        return;
+    }
+
+    let table =
+    document.getElementById("fuelTable");
+
+    let row =
+    table.insertRow();
+
+    row.insertCell(0).innerHTML = vehicle;
+    row.insertCell(1).innerHTML = litres;
+    row.insertCell(2).innerHTML = "KES " + cost;
+    row.insertCell(3).innerHTML = date;
+
+    document.getElementById("fuelVehicle").value = "";
+    document.getElementById("fuelLitres").value = "";
+    document.getElementById("fuelCost").value = "";
+    document.getElementById("fuelDate").value = "";
+
+}
+
+</script>
 
 </body>
 </html>
