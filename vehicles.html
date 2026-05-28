@@ -1,78 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Vehicles</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Vehicles - Fleet System</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-  <h2>Fleet System</h2>
-
-  <ul>
-    <li><a href="index.html">Dashboard</a></li>
-    <li><a href="vehicles.html">Vehicles</a></li>
-    <li><a href="drivers.html">Drivers</a></li>
-    <li><a href="revenue.html">Revenue</a></li>
-    <li><a href="fuel.html">Fuel</a></li>
-    <li><a href="reports.html">Reports</a></li>
-    <li><a href="attendance.html">Attendance</a></li>
-    <li><a href="admin.html">Admin</a></li>
-    <li><a href="login.html">Logout</a></li>
-  </ul>
+    <h2>Fleet System</h2>
+    <a href="index.html">Dashboard</a>
+    <a href="vehicles.html">Vehicles</a>
+    <a href="drivers.html">Drivers</a>
+    <a href="revenue.html">Revenue</a>
+    <a href="fuel.html">Fuel</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="reports.html">Reports</a>
+    <a href="login.html">Logout</a>
 </div>
 
+<!-- MAIN CONTENT -->
 <div class="main">
 
-  <h1>Vehicles</h1>
+    <h1>Vehicle Management</h1>
 
-  <div class="form-box">
-    <h2>Add Vehicle</h2>
+    <!-- FORM -->
+    <div class="card">
+        <h3>Add Vehicle</h3>
 
-    <input type="text" id="vehicleNumber" placeholder="Vehicle Number">
-    <input type="text" id="driverName" placeholder="Driver Name">
+        <form id="vehicleForm">
+            <input type="text" id="vehicleNumber" placeholder="Vehicle Number" required>
+            <input type="text" id="vehicleModel" placeholder="Vehicle Model" required>
+            <input type="text" id="vehicleRoute" placeholder="Route" required>
+            <input type="text" id="vehicleStatus" placeholder="Status (Active/Inactive)" required>
 
-    <select id="vehicleStatus">
-      <option>Active</option>
-      <option>Service</option>
-      <option>Inactive</option>
-    </select>
+            <button type="submit">Add Vehicle</button>
+        </form>
+    </div>
 
-    <button onclick="addVehicle()">Add Vehicle</button>
-  </div>
+    <!-- TABLE -->
+    <div class="card">
+        <h3>Vehicle List</h3>
 
-  <table id="vehicleTable">
-    <tr>
-      <th>Vehicle</th>
-      <th>Driver</th>
-      <th>Status</th>
-    </tr>
-  </table>
+        <table border="1" width="100%">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Model</th>
+                    <th>Route</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="vehicleTable"></tbody>
+        </table>
+    </div>
 
 </div>
 
+<!-- JAVASCRIPT -->
 <script>
-function addVehicle(){
+let vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
 
-    let vehicle = document.getElementById("vehicleNumber").value;
-    let driver = document.getElementById("driverName").value;
-    let status = document.getElementById("vehicleStatus").value;
+const vehicleForm = document.getElementById("vehicleForm");
+const vehicleTable = document.getElementById("vehicleTable");
 
-    if(vehicle === "" || driver === ""){
-        alert("Fill all fields");
-        return;
-    }
+function displayVehicles() {
+    vehicleTable.innerHTML = "";
 
-    let table = document.getElementById("vehicleTable");
-    let row = table.insertRow();
-
-    row.insertCell(0).innerHTML = vehicle;
-    row.insertCell(1).innerHTML = driver;
-    row.insertCell(2).innerHTML = status;
-
-    document.getElementById("vehicleNumber").value = "";
-    document.getElementById("driverName").value = "";
+    vehicles.forEach((vehicle) => {
+        vehicleTable.innerHTML += `
+            <tr>
+                <td>${vehicle.number}</td>
+                <td>${vehicle.model}</td>
+                <td>${vehicle.route}</td>
+                <td>${vehicle.status}</td>
+            </tr>
+        `;
+    });
 }
+
+vehicleForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const newVehicle = {
+        number: document.getElementById("vehicleNumber").value,
+        model: document.getElementById("vehicleModel").value,
+        route: document.getElementById("vehicleRoute").value,
+        status: document.getElementById("vehicleStatus").value
+    };
+
+    vehicles.push(newVehicle);
+
+    localStorage.setItem("vehicles", JSON.stringify(vehicles));
+
+    displayVehicles();
+
+    vehicleForm.reset();
+});
+
+displayVehicles();
 </script>
 
 </body>
