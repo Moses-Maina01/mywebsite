@@ -10,15 +10,42 @@
 
   <h1>Fleet Login</h1>
 
-  <input type="text" placeholder="Username">
+  <input type="text" id="username" placeholder="Username">
 
-  <input type="password" placeholder="Password">
+  <input type="password" id="password" placeholder="Password">
 
-  <a href="home.html" class="login-btn">
+  <button class="login-btn" onclick="login()">
     Login
-  </a>
+  </button>
+
+  <p id="error-message"></p>
 
 </div>
+
+<script>
+
+function login(){
+
+    let username =
+    document.getElementById("username").value;
+
+    let password =
+    document.getElementById("password").value;
+
+    if(username === "admin" && password === "1234"){
+
+        window.location.href = "home.html";
+
+    }else{
+
+        document.getElementById("error-message").innerHTML =
+        "Wrong username or password";
+
+    }
+
+}
+
+</script>
 
 </body>
 </html>
