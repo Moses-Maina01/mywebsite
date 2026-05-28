@@ -16,4 +16,64 @@
     <li><a href="revenue.html">Revenue</a></li>
     <li><a href="fuel.html">Fuel</a></li>
     <li><a href="reports.html">Reports</a></li>
-    <li><
+    <li><a href="attendance.html">Attendance</a></li>
+    <li><a href="admin.html">Admin</a></li>
+    <li><a href="login.html">Logout</a></li>
+  </ul>
+</div>
+
+<div class="main">
+
+  <h1>Vehicles</h1>
+
+  <div class="form-box">
+    <h2>Add Vehicle</h2>
+
+    <input type="text" id="vehicleNumber" placeholder="Vehicle Number">
+    <input type="text" id="driverName" placeholder="Driver Name">
+
+    <select id="vehicleStatus">
+      <option>Active</option>
+      <option>Service</option>
+      <option>Inactive</option>
+    </select>
+
+    <button onclick="addVehicle()">Add Vehicle</button>
+  </div>
+
+  <table id="vehicleTable">
+    <tr>
+      <th>Vehicle</th>
+      <th>Driver</th>
+      <th>Status</th>
+    </tr>
+  </table>
+
+</div>
+
+<script>
+function addVehicle(){
+
+    let vehicle = document.getElementById("vehicleNumber").value;
+    let driver = document.getElementById("driverName").value;
+    let status = document.getElementById("vehicleStatus").value;
+
+    if(vehicle === "" || driver === ""){
+        alert("Fill all fields");
+        return;
+    }
+
+    let table = document.getElementById("vehicleTable");
+    let row = table.insertRow();
+
+    row.insertCell(0).innerHTML = vehicle;
+    row.insertCell(1).innerHTML = driver;
+    row.insertCell(2).innerHTML = status;
+
+    document.getElementById("vehicleNumber").value = "";
+    document.getElementById("driverName").value = "";
+}
+</script>
+
+</body>
+</html>
