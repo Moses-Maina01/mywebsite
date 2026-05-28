@@ -296,3 +296,14 @@ table th{
 .login-btn:hover{
     background:#334155;
 }
+.login-btn{
+    width:100%;
+    border:none;
+    cursor:pointer;
+    font-size:16px;
+}
+
+#error-message{
+    color:red;
+    margin-top:15px;
+}
