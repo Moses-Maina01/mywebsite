@@ -23,8 +23,80 @@
 </div>
 
 <div class="main">
-  <h1>Drivers Page</h1>
+
+  <h1>Drivers</h1>
+
+  <div class="form-box">
+
+    <h2>Add Driver</h2>
+
+    <input type="text" id="driverFullName" placeholder="Driver Name">
+
+    <input type="text" id="driverPhone" placeholder="Phone Number">
+
+    <input type="text" id="driverLicense" placeholder="License Number">
+    
+    <input type="text" id="driverLicense" placeholder="ID Number">
+    
+   <button onclick="addDriver()">Add Driver</button>
+
+  </div>
+
+  <table id="driversTable">
+
+    <tr>
+      <th>Driver Name</th>
+      <th>Phone Number</th>
+      <th>License Number</th>
+    </tr>
+
+    <tr>
+      <td>Maina</td>
+      <td>0712345678</td>
+      <td>DL1001</td>
+    </tr>
+
+  </table>
+
 </div>
+
+<script>
+
+function addDriver(){
+
+    let name =
+    document.getElementById("driverFullName").value;
+
+    let phone =
+    document.getElementById("driverPhone").value;
+
+    let license =
+    document.getElementById("driverLicense").value;
+
+    if(name === "" || phone === "" || license === ""){
+
+        alert("Please fill all fields");
+
+        return;
+    }
+
+    let table =
+    document.getElementById("driversTable");
+
+    let row =
+    table.insertRow();
+
+    row.insertCell(0).innerHTML = name;
+    row.insertCell(1).innerHTML = phone;
+    row.insertCell(2).innerHTML = license;
+
+    document.getElementById("driverFullName").value = "";
+    document.getElementById("driverPhone").value = "";
+    document.getElementById("driverLicense").value = "";
+
+}
+
+</script>
 
 </body>
 </html>
