@@ -1,65 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Drivers</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<div class="sidebar">
-  <h2>Fleet System</h2>
-
-  <ul>
-    <li><a href="index.html">Dashboard</a></li>
-    <li><a href="vehicles.html">Vehicles</a></li>
-    <li><a href="drivers.html">Drivers</a></li>
-    <li><a href="revenue.html">Revenue</a></li>
-    <li><a href="fuel.html">Fuel</a></li>
-    <li><a href="reports.html">Reports</a></li>
-    <li><a href="attendance.html">Attendance</a></li>
-    <li><a href="admin.html">Admin</a></li>
-    <li><a href="login.html">Logout</a></li>
-  </ul>
-</div>
-
-<div class="main">
-
-  <h1>Drivers</h1>
-
-  <div class="form-box">
-
-    <h2>Add Driver</h2>
-
-    <input type="text" id="driverFullName" placeholder="Driver Name">
-
-    <input type="text" id="driverPhone" placeholder="Phone Number">
-
-    <input type="text" id="driverLicense" placeholder="License Number">
-    
-    <input type="text" id="driverLicense" placeholder="ID Number">
-    
-   <button onclick="addDriver()">Add Driver</button>
-
-  </div>
-
-  <table id="driversTable">
-
-    <tr>
-      <th>Driver Name</th>
-      <th>Phone Number</th>
-      <th>License Number</th>
-    </tr>
-
-    <tr>
-      <td>Maina</td>
-      <td>0712345678</td>
-      <td>DL1001</td>
-    </tr>
-
-  </table>
-
-</div>
-
 <script>
 
 function addDriver(){
@@ -73,7 +11,10 @@ function addDriver(){
     let license =
     document.getElementById("driverLicense").value;
 
-    if(name === "" || phone === "" || license === ""){
+    let idNumber =
+    document.getElementById("driverIdNumber").value;
+
+    if(name === "" || phone === "" || license === "" || idNumber === ""){
 
         alert("Please fill all fields");
 
@@ -89,14 +30,13 @@ function addDriver(){
     row.insertCell(0).innerHTML = name;
     row.insertCell(1).innerHTML = phone;
     row.insertCell(2).innerHTML = license;
+    row.insertCell(3).innerHTML = idNumber;
 
     document.getElementById("driverFullName").value = "";
     document.getElementById("driverPhone").value = "";
     document.getElementById("driverLicense").value = "";
+    document.getElementById("driverIdNumber").value = "";
 
 }
 
 </script>
-
-</body>
-</html>
