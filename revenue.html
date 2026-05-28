@@ -23,8 +23,87 @@
 </div>
 
 <div class="main">
-  <h1>Revenue Page</h1>
+
+  <h1>Revenue Management</h1>
+
+  <div class="form-box">
+
+    <h2>Add Revenue</h2>
+
+    <input type="text" id="vehicleNumber" placeholder="Vehicle Number">
+
+    <input type="text" id="driverName" placeholder="Driver Name">
+
+    <input type="number" id="revenueAmount" placeholder="Revenue Amount">
+
+    <input type="date" id="revenueDate">
+
+    <button onclick="addRevenue()">Add Revenue</button>
+
+  </div>
+
+  <table id="revenueTable">
+
+    <tr>
+      <th>Vehicle</th>
+      <th>Driver</th>
+      <th>Revenue</th>
+      <th>Date</th>
+    </tr>
+
+    <tr>
+      <td>116</td>
+      <td>Maina</td>
+      <td>KES 8500</td>
+      <td>2026-05-28</td>
+    </tr>
+
+  </table>
+
 </div>
+
+<script>
+
+function addRevenue(){
+
+    let vehicle =
+    document.getElementById("vehicleNumber").value;
+
+    let driver =
+    document.getElementById("driverName").value;
+
+    let revenue =
+    document.getElementById("revenueAmount").value;
+
+    let date =
+    document.getElementById("revenueDate").value;
+
+    if(vehicle === "" || driver === "" || revenue === "" || date === ""){
+
+        alert("Please fill all fields");
+
+        return;
+    }
+
+    let table =
+    document.getElementById("revenueTable");
+
+    let row =
+    table.insertRow();
+
+    row.insertCell(0).innerHTML = vehicle;
+    row.insertCell(1).innerHTML = driver;
+    row.insertCell(2).innerHTML = "KES " + revenue;
+    row.insertCell(3).innerHTML = date;
+
+    document.getElementById("vehicleNumber").value = "";
+    document.getElementById("driverName").value = "";
+    document.getElementById("revenueAmount").value = "";
+    document.getElementById("revenueDate").value = "";
+
+}
+
+</script>
 
 </body>
 </html>
