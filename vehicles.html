@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Vehicles - Fleet System</title>
+    <title>Vehicles - Fleet Management System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -28,7 +28,7 @@
 
     <!-- FORM -->
     <div class="card">
-        <h3>Add Vehicle</h3>
+        <h3>Add / Edit Vehicle</h3>
 
         <form id="vehicleForm">
             <input type="text" id="vehicleNumber" placeholder="Vehicle Number" required>
@@ -36,7 +36,7 @@
             <input type="text" id="vehicleRoute" placeholder="Route" required>
             <input type="text" id="vehicleStatus" placeholder="Status (Active/Inactive)" required>
 
-            <button type="submit">Add Vehicle</button>
+            <button type="submit">Save Vehicle</button>
         </form>
     </div>
 
@@ -51,6 +51,7 @@
                     <th>Model</th>
                     <th>Route</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
@@ -60,47 +61,82 @@
 
 </div>
 
-<!-- JAVASCRIPT -->
 <script>
 let vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
 
 const vehicleForm = document.getElementById("vehicleForm");
 const vehicleTable = document.getElementById("vehicleTable");
 
+let editIndex = null;
+
+// SAVE TO STORAGE
+function saveData() {
+    localStorage.setItem("vehicles", JSON.stringify(vehicles));
+}
+
+// DISPLAY TABLE
 function displayVehicles() {
     vehicleTable.innerHTML = "";
 
-    vehicles.forEach((vehicle) => {
+    vehicles.forEach((v, index) => {
         vehicleTable.innerHTML += `
             <tr>
-                <td>${vehicle.number}</td>
-                <td>${vehicle.model}</td>
-                <td>${vehicle.route}</td>
-                <td>${vehicle.status}</td>
+                <td>${v.number}</td>
+                <td>${v.model}</td>
+                <td>${v.route}</td>
+                <td>${v.status}</td>
+                <td>
+                    <button onclick="editVehicle(${index})">Edit</button>
+                    <button onclick="deleteVehicle(${index})">Delete</button>
+                </td>
             </tr>
         `;
     });
 }
 
+// ADD / UPDATE VEHICLE
 vehicleForm.addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const newVehicle = {
+    const vehicle = {
         number: document.getElementById("vehicleNumber").value,
         model: document.getElementById("vehicleModel").value,
         route: document.getElementById("vehicleRoute").value,
         status: document.getElementById("vehicleStatus").value
     };
 
-    vehicles.push(newVehicle);
+    if (editIndex === null) {
+        vehicles.push(vehicle);
+    } else {
+        vehicles[editIndex] = vehicle;
+        editIndex = null;
+    }
 
-    localStorage.setItem("vehicles", JSON.stringify(vehicles));
-
+    saveData();
     displayVehicles();
-
     vehicleForm.reset();
 });
 
+// DELETE VEHICLE
+function deleteVehicle(index) {
+    vehicles.splice(index, 1);
+    saveData();
+    displayVehicles();
+}
+
+// EDIT VEHICLE
+function editVehicle(index) {
+    const v = vehicles[index];
+
+    document.getElementById("vehicleNumber").value = v.number;
+    document.getElementById("vehicleModel").value = v.model;
+    document.getElementById("vehicleRoute").value = v.route;
+    document.getElementById("vehicleStatus").value = v.status;
+
+    editIndex = index;
+}
+
+// INIT
 displayVehicles();
 </script>
 
