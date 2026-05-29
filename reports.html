@@ -1,103 +1,170 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Reports</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Fleet System</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- CHART.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-  <h2>Fleet System</h2>
 
-  <ul>
-    <li><a href="index.html">Dashboard</a></li>
-    <li><a href="vehicles.html">Vehicles</a></li>
-    <li><a href="drivers.html">Drivers</a></li>
-    <li><a href="revenue.html">Revenue</a></li>
-    <li><a href="fuel.html">Fuel</a></li>
-    <li><a href="reports.html">Reports</a></li>
-    <li><a href="attendance.html">Attendance</a></li>
-    <li><a href="admin.html">Admin</a></li>
-    <li><a href="login.html">Logout</a></li>
-  </ul>
+    <h2>Fleet System</h2>
+
+    <a href="index.html">Dashboard</a>
+    <a href="vehicles.html">Vehicles</a>
+    <a href="drivers.html">Drivers</a>
+    <a href="revenue.html">Revenue</a>
+    <a href="fuel.html">Fuel</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="reports.html">Reports</a>
+    <a href="login.html">Logout</a>
+
 </div>
 
+<!-- MAIN -->
 <div class="main">
-  .topbar{
-    background:white;
-    padding:15px 20px;
-    border-radius:10px;
-    margin-bottom:20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 2px 10px rgba(0,0,0,0.1);
-}
 
-.topbar h2{
-    margin:0;
-}
+    <h1>Reports & Analytics</h1>
 
-.user-box{
-    font-weight:bold;
-    color:#1e293b;
-}
+    <!-- SUMMARY CARDS -->
+    <div class="cards">
 
-  <h1>System Reports</h1>
+        <div class="card">
+            <h3>Total Vehicles</h3>
+            <p id="vehicleCount">0</p>
+        </div>
 
-  <div class="cards">
+        <div class="card">
+            <h3>Total Drivers</h3>
+            <p id="driverCount">0</p>
+        </div>
 
-    <div class="card">
-      <h3>Total Vehicles</h3>
-      <p>19</p>
+        <div class="card">
+            <h3>Total Revenue</h3>
+            <p id="revenueTotal">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Fuel Cost</h3>
+            <p id="fuelTotal">0</p>
+        </div>
+
     </div>
 
+    <!-- REVENUE CHART -->
     <div class="card">
-      <h3>Total Drivers</h3>
-      <p>24</p>
+
+        <h2>Revenue vs Fuel Analytics</h2>
+
+        <canvas id="financeChart"></canvas>
+
     </div>
 
+    <!-- ATTENDANCE -->
     <div class="card">
-      <h3>Total Revenue</h3>
-      <p>KES 850,000</p>
+
+        <h2>Attendance Summary</h2>
+
+        <p id="attendanceSummary"></p>
+
     </div>
-
-    <div class="card">
-      <h3>Total Fuel Cost</h3>
-      <p>KES 210,000</p>
-    </div>
-
-  </div>
-
-  <table>
-
-    <tr>
-      <th>Report Type</th>
-      <th>Status</th>
-      <th>Date</th>
-    </tr>
-
-    <tr>
-      <td>Revenue Report</td>
-      <td>Completed</td>
-      <td>2026-05-28</td>
-    </tr>
-
-    <tr>
-      <td>Fuel Report</td>
-      <td>Completed</td>
-      <td>2026-05-28</td>
-    </tr>
-
-    <tr>
-      <td>Attendance Report</td>
-      <td>Pending</td>
-      <td>2026-05-28</td>
-    </tr>
-
-  </table>
 
 </div>
+
+<script>
+
+// LOAD STORAGE
+let vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+
+let drivers = JSON.parse(localStorage.getItem("drivers")) || [];
+
+let revenue = JSON.parse(localStorage.getItem("revenue")) || [];
+
+let fuel = JSON.parse(localStorage.getItem("fuel")) || [];
+
+let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+
+// COUNTS
+document.getElementById("vehicleCount").innerText = vehicles.length;
+
+document.getElementById("driverCount").innerText = drivers.length;
+
+// REVENUE TOTAL
+let totalRevenue = revenue.reduce((sum, item) => {
+
+    return sum + Number(item.amount || 0);
+
+}, 0);
+
+// FUEL TOTAL
+let totalFuel = fuel.reduce((sum, item) => {
+
+    return sum + Number(item.cost || 0);
+
+}, 0);
+
+// DISPLAY TOTALS
+document.getElementById("revenueTotal").innerText = totalRevenue;
+
+document.getElementById("fuelTotal").innerText = totalFuel;
+
+// ATTENDANCE SUMMARY
+let present = attendance.filter(a => a.status === "Present").length;
+
+let absent = attendance.filter(a => a.status === "Absent").length;
+
+let off = attendance.filter(a => a.status === "Off").length;
+
+document.getElementById("attendanceSummary").innerHTML = `
+    Present: ${present}<br>
+    Absent: ${absent}<br>
+    Off: ${off}
+`;
+
+// CHART
+const ctx = document.getElementById('financeChart');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: ['Revenue', 'Fuel'],
+
+        datasets: [{
+
+            label: 'Fleet Finance',
+
+            data: [totalRevenue, totalFuel],
+
+            borderWidth: 1
+        }]
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+</script>
 
 </body>
 </html>
