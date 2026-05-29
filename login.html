@@ -1,24 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <title>Login</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Login</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="login-body">
 
 <div class="login-box">
 
-  <h1>Fleet Login</h1>
+    <h1>Fleet Login</h1>
 
-  <input type="text" id="username" placeholder="Username">
+    <input type="text"
+    id="username"
+    placeholder="Username">
 
-  <input type="password" id="password" placeholder="Password">
+    <input type="password"
+    id="password"
+    placeholder="Password">
 
-  <button class="login-btn" onclick="login()">
-    Login
-  </button>
+    <button class="login-btn"
+    onclick="login()">
 
-  <p id="error-message"></p>
+        Login
+
+    </button>
+
+    <p id="error-message"></p>
 
 </div>
 
@@ -32,9 +44,14 @@ function login(){
     let password =
     document.getElementById("password").value;
 
+    // LOGIN DETAILS
     if(username === "admin" && password === "1234"){
 
-        window.location.href = "home.html";
+        // SAVE LOGIN
+        localStorage.setItem("loggedIn", "true");
+
+        // GO TO DASHBOARD
+        window.location.href = "index.html";
 
     }else{
 
