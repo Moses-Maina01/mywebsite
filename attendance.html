@@ -1,110 +1,214 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Attendance</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management - Fleet System</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-  <h2>Fleet System</h2>
 
-  <ul>
-    <li><a href="index.html">Dashboard</a></li>
-    <li><a href="vehicles.html">Vehicles</a></li>
-    <li><a href="drivers.html">Drivers</a></li>
-    <li><a href="revenue.html">Revenue</a></li>
-    <li><a href="fuel.html">Fuel</a></li>
-    <li><a href="reports.html">Reports</a></li>
-    <li><a href="attendance.html">Attendance</a></li>
-    <li><a href="admin.html">Admin</a></li>
-    <li><a href="login.html">Logout</a></li>
-  </ul>
+    <h2>Fleet System</h2>
+
+    <a href="index.html">Dashboard</a>
+    <a href="vehicles.html">Vehicles</a>
+    <a href="drivers.html">Drivers</a>
+    <a href="revenue.html">Revenue</a>
+    <a href="fuel.html">Fuel</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="reports.html">Reports</a>
+    <a href="login.html">Logout</a>
+
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
-  <h1>Attendance Management</h1>
+    <h1>Attendance Management</h1>
 
-  <div class="form-box">
+    <!-- FORM -->
+    <div class="card">
 
-    <h2>Add Attendance</h2>
+        <h3>Add Attendance</h3>
 
-    <input type="text" id="attendanceDriver" placeholder="Driver Name">
+        <form id="attendanceForm">
 
-    <input type="text" id="attendanceVehicle" placeholder="Vehicle Number">
+            <input type="text" id="employeeName" placeholder="Employee Name" required>
 
-    <select id="attendanceStatus">
-      <option>Present</option>
-      <option>Absent</option>
-      <option>Off Duty</option>
-    </select>
+            <input type="text" id="position" placeholder="Position" required>
 
-    <input type="date" id="attendanceDate">
+            <input type="date" id="date" required>
 
-    <button onclick="addAttendance()">Add Attendance</button>
+            <select id="status" required>
+                <option value="">Select Status</option>
+                <option value="Present">Present</option>
+                <option value="Absent">Absent</option>
+                <option value="Off">Off</option>
+            </select>
 
-  </div>
+            <button type="submit">Save Attendance</button>
 
-  <table id="attendanceTable">
+        </form>
 
-    <tr>
-      <th>Driver</th>
-      <th>Vehicle</th>
-      <th>Status</th>
-      <th>Date</th>
-    </tr>
+    </div>
 
-    <tr>
-      <td>Maina</td>
-      <td>116</td>
-      <td>Present</td>
-      <td>2026-05-28</td>
-    </tr>
+    <!-- SEARCH -->
+    <div class="card">
 
-  </table>
+        <input type="text" id="searchAttendance" placeholder="Search Attendance...">
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="card">
+
+        <h3>Attendance Records</h3>
+
+        <table border="1" width="100%">
+
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Position</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="attendanceTable"></tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
 <script>
 
-function addAttendance(){
+let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
 
-    let driver =
-    document.getElementById("attendanceDriver").value;
+const attendanceForm = document.getElementById("attendanceForm");
+const attendanceTable = document.getElementById("attendanceTable");
 
-    let vehicle =
-    document.getElementById("attendanceVehicle").value;
+let editIndex = null;
 
-    let status =
-    document.getElementById("attendanceStatus").value;
+// SAVE
+function saveAttendance(){
 
-    let date =
-    document.getElementById("attendanceDate").value;
+    localStorage.setItem("attendance", JSON.stringify(attendance));
+}
 
-    if(driver === "" || vehicle === "" || date === ""){
+// DISPLAY
+function displayAttendance(){
 
-        alert("Please fill all fields");
+    const search = document
+    .getElementById("searchAttendance")
+    .value
+    .toLowerCase();
 
-        return;
+    attendanceTable.innerHTML = "";
+
+    attendance
+    .filter(a =>
+        a.employee.toLowerCase().includes(search) ||
+        a.position.toLowerCase().includes(search) ||
+        a.status.toLowerCase().includes(search)
+    )
+
+    .forEach((a, index) => {
+
+        attendanceTable.innerHTML += `
+            <tr>
+                <td>${a.employee}</td>
+                <td>${a.position}</td>
+                <td>${a.date}</td>
+                <td>${a.status}</td>
+
+                <td>
+
+                    <button onclick="editAttendance(${index})">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteAttendance(${index})">
+                        Delete
+                    </button>
+
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// ADD / UPDATE
+attendanceForm.addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const attendanceData = {
+
+        employee: document.getElementById("employeeName").value,
+
+        position: document.getElementById("position").value,
+
+        date: document.getElementById("date").value,
+
+        status: document.getElementById("status").value
+    };
+
+    if(editIndex === null){
+
+        attendance.push(attendanceData);
+
+    } else {
+
+        attendance[editIndex] = attendanceData;
+        editIndex = null;
     }
 
-    let table =
-    document.getElementById("attendanceTable");
+    saveAttendance();
+    displayAttendance();
 
-    let row =
-    table.insertRow();
+    attendanceForm.reset();
+});
 
-    row.insertCell(0).innerHTML = driver;
-    row.insertCell(1).innerHTML = vehicle;
-    row.insertCell(2).innerHTML = status;
-    row.insertCell(3).innerHTML = date;
+// DELETE
+function deleteAttendance(index){
 
-    document.getElementById("attendanceDriver").value = "";
-    document.getElementById("attendanceVehicle").value = "";
-    document.getElementById("attendanceDate").value = "";
+    attendance.splice(index, 1);
 
+    saveAttendance();
+    displayAttendance();
 }
+
+// EDIT
+function editAttendance(index){
+
+    const a = attendance[index];
+
+    document.getElementById("employeeName").value = a.employee;
+
+    document.getElementById("position").value = a.position;
+
+    document.getElementById("date").value = a.date;
+
+    document.getElementById("status").value = a.status;
+
+    editIndex = index;
+}
+
+// SEARCH
+document
+.getElementById("searchAttendance")
+.addEventListener("keyup", displayAttendance);
+
+// INIT
+displayAttendance();
 
 </script>
 
