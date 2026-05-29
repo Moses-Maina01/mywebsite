@@ -1,107 +1,203 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Fuel Management</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Fuel Management - Fleet System</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-  <h2>Fleet System</h2>
+    <h2>Fleet System</h2>
 
-  <ul>
-    <li><a href="index.html">Dashboard</a></li>
-    <li><a href="vehicles.html">Vehicles</a></li>
-    <li><a href="drivers.html">Drivers</a></li>
-    <li><a href="revenue.html">Revenue</a></li>
-    <li><a href="fuel.html">Fuel</a></li>
-    <li><a href="reports.html">Reports</a></li>
-    <li><a href="attendance.html">Attendance</a></li>
-    <li><a href="admin.html">Admin</a></li>
-    <li><a href="login.html">Logout</a></li>
-  </ul>
+    <a href="index.html">Dashboard</a>
+    <a href="vehicles.html">Vehicles</a>
+    <a href="drivers.html">Drivers</a>
+    <a href="revenue.html">Revenue</a>
+    <a href="fuel.html">Fuel</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="reports.html">Reports</a>
+    <a href="login.html">Logout</a>
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
-  <h1>Fuel Management</h1>
+    <h1>Fuel Management</h1>
 
-  <div class="form-box">
+    <!-- FORM -->
+    <div class="card">
 
-    <h2>Add Fuel Record</h2>
+        <h3>Add Fuel Record</h3>
 
-    <input type="text" id="fuelVehicle" placeholder="Vehicle Number">
+        <form id="fuelForm">
 
-    <input type="number" id="fuelLitres" placeholder="Litres">
+            <input type="text" id="vehicle" placeholder="Vehicle Number" required>
 
-    <input type="number" id="fuelCost" placeholder="Fuel Cost">
+            <input type="number" id="liters" placeholder="Fuel Liters" required>
 
-    <input type="date" id="fuelDate">
+            <input type="number" id="cost" placeholder="Fuel Cost" required>
 
-    <button onclick="addFuel()">Add Fuel</button>
+            <input type="date" id="date" required>
 
-  </div>
+            <button type="submit">Save Fuel</button>
 
-  <table id="fuelTable">
+        </form>
 
-    <tr>
-      <th>Vehicle</th>
-      <th>Litres</th>
-      <th>Cost</th>
-      <th>Date</th>
-    </tr>
+    </div>
 
-    <tr>
-      <td>116</td>
-      <td>50</td>
-      <td>KES 8,000</td>
-      <td>2026-05-28</td>
-    </tr>
+    <!-- SEARCH -->
+    <div class="card">
 
-  </table>
+        <input type="text" id="searchFuel" placeholder="Search Fuel Records...">
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="card">
+
+        <h3>Fuel Records</h3>
+
+        <table border="1" width="100%">
+
+            <thead>
+                <tr>
+                    <th>Vehicle</th>
+                    <th>Liters</th>
+                    <th>Cost</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="fuelTable"></tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
 <script>
 
-function addFuel(){
+let fuel = JSON.parse(localStorage.getItem("fuel")) || [];
 
-    let vehicle =
-    document.getElementById("fuelVehicle").value;
+const fuelForm = document.getElementById("fuelForm");
+const fuelTable = document.getElementById("fuelTable");
 
-    let litres =
-    document.getElementById("fuelLitres").value;
+let editIndex = null;
 
-    let cost =
-    document.getElementById("fuelCost").value;
+// SAVE
+function saveFuel(){
 
-    let date =
-    document.getElementById("fuelDate").value;
+    localStorage.setItem("fuel", JSON.stringify(fuel));
+}
 
-    if(vehicle === "" || litres === "" || cost === "" || date === ""){
+// DISPLAY
+function displayFuel(){
 
-        alert("Please fill all fields");
+    const search = document
+    .getElementById("searchFuel")
+    .value
+    .toLowerCase();
 
-        return;
+    fuelTable.innerHTML = "";
+
+    fuel
+    .filter(f =>
+        f.vehicle.toLowerCase().includes(search) ||
+        f.date.toLowerCase().includes(search)
+    )
+
+    .forEach((f, index) => {
+
+        fuelTable.innerHTML += `
+            <tr>
+                <td>${f.vehicle}</td>
+                <td>${f.liters}</td>
+                <td>${f.cost}</td>
+                <td>${f.date}</td>
+
+                <td>
+                    <button onclick="editFuel(${index})">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteFuel(${index})">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// ADD / UPDATE
+fuelForm.addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const fuelData = {
+
+        vehicle: document.getElementById("vehicle").value,
+
+        liters: document.getElementById("liters").value,
+
+        cost: document.getElementById("cost").value,
+
+        date: document.getElementById("date").value
+    };
+
+    if(editIndex === null){
+
+        fuel.push(fuelData);
+
+    } else {
+
+        fuel[editIndex] = fuelData;
+        editIndex = null;
     }
 
-    let table =
-    document.getElementById("fuelTable");
+    saveFuel();
+    displayFuel();
 
-    let row =
-    table.insertRow();
+    fuelForm.reset();
+});
 
-    row.insertCell(0).innerHTML = vehicle;
-    row.insertCell(1).innerHTML = litres;
-    row.insertCell(2).innerHTML = "KES " + cost;
-    row.insertCell(3).innerHTML = date;
+// DELETE
+function deleteFuel(index){
 
-    document.getElementById("fuelVehicle").value = "";
-    document.getElementById("fuelLitres").value = "";
-    document.getElementById("fuelCost").value = "";
-    document.getElementById("fuelDate").value = "";
+    fuel.splice(index, 1);
 
+    saveFuel();
+    displayFuel();
 }
+
+// EDIT
+function editFuel(index){
+
+    const f = fuel[index];
+
+    document.getElementById("vehicle").value = f.vehicle;
+
+    document.getElementById("liters").value = f.liters;
+
+    document.getElementById("cost").value = f.cost;
+
+    document.getElementById("date").value = f.date;
+
+    editIndex = index;
+}
+
+// SEARCH
+document
+.getElementById("searchFuel")
+.addEventListener("keyup", displayFuel);
+
+// INIT
+displayFuel();
 
 </script>
 
