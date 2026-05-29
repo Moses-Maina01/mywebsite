@@ -141,10 +141,15 @@ function displayVehicles(){
 
     vehicles
     .filter(v =>
-        v.number.toLowerCase().includes(search) ||
-        v.model.toLowerCase().includes(search) ||
-        v.route.toLowerCase().includes(search) ||
-        v.status.toLowerCase().includes(search)
+
+        String(v.number).toLowerCase().includes(search) ||
+
+        String(v.model).toLowerCase().includes(search) ||
+
+        String(v.route).toLowerCase().includes(search) ||
+
+        String(v.status).toLowerCase().includes(search)
+
     )
 
     .forEach((v, index) => {
@@ -167,9 +172,9 @@ function displayVehicles(){
                 </td>
             </tr>
         `;
+
     });
 }
-
 // ADD / UPDATE
 vehicleForm.addEventListener("submit", function(e){
 
