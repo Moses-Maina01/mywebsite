@@ -1,107 +1,195 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Revenue</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Revenue - Fleet Management System</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-  <h2>Fleet System</h2>
+    <h2>Fleet System</h2>
 
-  <ul>
-    <li><a href="index.html">Dashboard</a></li>
-    <li><a href="vehicles.html">Vehicles</a></li>
-    <li><a href="drivers.html">Drivers</a></li>
-    <li><a href="revenue.html">Revenue</a></li>
-    <li><a href="fuel.html">Fuel</a></li>
-    <li><a href="reports.html">Reports</a></li>
-    <li><a href="attendance.html">Attendance</a></li>
-    <li><a href="admin.html">Admin</a></li>
-    <li><a href="login.html">Logout</a></li>
-  </ul>
+    <a href="index.html">Dashboard</a>
+    <a href="vehicles.html">Vehicles</a>
+    <a href="drivers.html">Drivers</a>
+    <a href="revenue.html">Revenue</a>
+    <a href="fuel.html">Fuel</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="reports.html">Reports</a>
+    <a href="login.html">Logout</a>
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
-  <h1>Revenue Management</h1>
+    <h1>Revenue Management</h1>
 
-  <div class="form-box">
+    <!-- FORM -->
+    <div class="card">
 
-    <h2>Add Revenue</h2>
+        <h3>Add Revenue</h3>
 
-    <input type="text" id="vehicleNumber" placeholder="Vehicle Number">
+        <form id="revenueForm">
 
-    <input type="text" id="driverName" placeholder="Driver Name">
+            <input type="text" id="vehicle" placeholder="Vehicle Number" required>
 
-    <input type="number" id="revenueAmount" placeholder="Revenue Amount">
+            <input type="number" id="amount" placeholder="Revenue Amount" required>
 
-    <input type="date" id="revenueDate">
+            <input type="date" id="date" required>
 
-    <button onclick="addRevenue()">Add Revenue</button>
+            <button type="submit">Save Revenue</button>
 
-  </div>
+        </form>
 
-  <table id="revenueTable">
+    </div>
 
-    <tr>
-      <th>Vehicle</th>
-      <th>Driver</th>
-      <th>Revenue</th>
-      <th>Date</th>
-    </tr>
+    <!-- SEARCH -->
+    <div class="card">
 
-    <tr>
-      <td>116</td>
-      <td>Maina</td>
-      <td>KES 8500</td>
-      <td>2026-05-28</td>
-    </tr>
+        <input type="text" id="searchRevenue" placeholder="Search Revenue...">
 
-  </table>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card">
+
+        <h3>Revenue Records</h3>
+
+        <table border="1" width="100%">
+
+            <thead>
+                <tr>
+                    <th>Vehicle</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="revenueTable"></tbody>
+
+        </table>
+
+    </div>
 
 </div>
 
 <script>
 
-function addRevenue(){
+let revenue = JSON.parse(localStorage.getItem("revenue")) || [];
 
-    let vehicle =
-    document.getElementById("vehicleNumber").value;
+const revenueForm = document.getElementById("revenueForm");
+const revenueTable = document.getElementById("revenueTable");
 
-    let driver =
-    document.getElementById("driverName").value;
+let editIndex = null;
 
-    let revenue =
-    document.getElementById("revenueAmount").value;
+// SAVE
+function saveRevenue(){
 
-    let date =
-    document.getElementById("revenueDate").value;
+    localStorage.setItem("revenue", JSON.stringify(revenue));
+}
 
-    if(vehicle === "" || driver === "" || revenue === "" || date === ""){
+// DISPLAY
+function displayRevenue(){
 
-        alert("Please fill all fields");
+    const search = document
+    .getElementById("searchRevenue")
+    .value
+    .toLowerCase();
 
-        return;
+    revenueTable.innerHTML = "";
+
+    revenue
+    .filter(r =>
+        r.vehicle.toLowerCase().includes(search) ||
+        r.date.toLowerCase().includes(search)
+    )
+
+    .forEach((r, index) => {
+
+        revenueTable.innerHTML += `
+            <tr>
+                <td>${r.vehicle}</td>
+                <td>${r.amount}</td>
+                <td>${r.date}</td>
+
+                <td>
+                    <button onclick="editRevenue(${index})">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteRevenue(${index})">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// ADD / UPDATE
+revenueForm.addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const revenueData = {
+
+        vehicle: document.getElementById("vehicle").value,
+
+        amount: document.getElementById("amount").value,
+
+        date: document.getElementById("date").value
+    };
+
+    if(editIndex === null){
+
+        revenue.push(revenueData);
+
+    } else {
+
+        revenue[editIndex] = revenueData;
+        editIndex = null;
     }
 
-    let table =
-    document.getElementById("revenueTable");
+    saveRevenue();
+    displayRevenue();
 
-    let row =
-    table.insertRow();
+    revenueForm.reset();
+});
 
-    row.insertCell(0).innerHTML = vehicle;
-    row.insertCell(1).innerHTML = driver;
-    row.insertCell(2).innerHTML = "KES " + revenue;
-    row.insertCell(3).innerHTML = date;
+// DELETE
+function deleteRevenue(index){
 
-    document.getElementById("vehicleNumber").value = "";
-    document.getElementById("driverName").value = "";
-    document.getElementById("revenueAmount").value = "";
-    document.getElementById("revenueDate").value = "";
+    revenue.splice(index, 1);
 
+    saveRevenue();
+    displayRevenue();
 }
+
+// EDIT
+function editRevenue(index){
+
+    const r = revenue[index];
+
+    document.getElementById("vehicle").value = r.vehicle;
+
+    document.getElementById("amount").value = r.amount;
+
+    document.getElementById("date").value = r.date;
+
+    editIndex = index;
+}
+
+// SEARCH
+document
+.getElementById("searchRevenue")
+.addEventListener("keyup", displayRevenue);
+
+// INIT
+displayRevenue();
 
 </script>
 
