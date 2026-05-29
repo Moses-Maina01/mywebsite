@@ -7,7 +7,14 @@
 </head>
 
 <body>
+<script>
 
+if(localStorage.getItem("loggedIn") !== "true"){
+
+    window.location.href = "login.html";
+}
+
+</script>
 <!-- SIDEBAR -->
 <div class="sidebar">
     <h2>Fleet System</h2>
