@@ -1,117 +1,195 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Drivers</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Drivers - Fleet Management System</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
+    <h2>Fleet System</h2>
 
-  <h2>Fleet System</h2>
-
-  <ul>
-    <li><a href="index.html">Dashboard</a></li>
-    <li><a href="vehicles.html">Vehicles</a></li>
-    <li><a href="drivers.html">Drivers</a></li>
-    <li><a href="revenue.html">Revenue</a></li>
-    <li><a href="fuel.html">Fuel</a></li>
-    <li><a href="reports.html">Reports</a></li>
-    <li><a href="attendance.html">Attendance</a></li>
-    <li><a href="admin.html">Admin</a></li>
-    <li><a href="login.html">Logout</a></li>
-  </ul>
-
+    <a href="index.html">Dashboard</a>
+    <a href="vehicles.html">Vehicles</a>
+    <a href="drivers.html">Drivers</a>
+    <a href="revenue.html">Revenue</a>
+    <a href="fuel.html">Fuel</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="reports.html">Reports</a>
+    <a href="login.html">Logout</a>
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
-  <div class="topbar">
+    <h1>Driver Management</h1>
 
-    <h2>Drivers Management</h2>
+    <!-- FORM -->
+    <div class="card">
 
-    <div class="user-box">
-      Welcome Admin
+        <h3>Add / Edit Driver</h3>
+
+        <form id="driverForm">
+
+            <input type="text" id="driverName" placeholder="Driver Name" required>
+
+            <input type="text" id="driverPhone" placeholder="Phone Number" required>
+
+            <input type="text" id="driverLicense" placeholder="License Number" required>
+
+            <button type="submit">Save Driver</button>
+
+        </form>
+
     </div>
 
-  </div>
+    <!-- SEARCH -->
+    <div class="card">
 
-  <div class="form-box">
+        <input type="text" id="searchDriver" placeholder="Search Driver...">
 
-    <h2>Add Driver</h2>
+    </div>
 
-    <input type="text" id="driverFullName" placeholder="Driver Name">
+    <!-- TABLE -->
+    <div class="card">
 
-    <input type="text" id="driverPhone" placeholder="Phone Number">
+        <h3>Driver List</h3>
 
-    <input type="text" id="driverLicense" placeholder="License Number">
+        <table border="1" width="100%">
 
-    <input type="text" id="driverIdNumber" placeholder="ID Number">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>License</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
 
-    <button onclick="addDriver()">Add Driver</button>
+            <tbody id="driverTable"></tbody>
 
-  </div>
+        </table>
 
-  <table id="driversTable">
-
-    <tr>
-      <th>Driver Name</th>
-      <th>Phone Number</th>
-      <th>License Number</th>
-      <th>ID Number</th>
-    </tr>
-
-    <tr>
-      <td>Maina</td>
-      <td>0712345678</td>
-      <td>DL1001</td>
-      <td>34567890</td>
-    </tr>
-
-  </table>
+    </div>
 
 </div>
 
 <script>
 
-function addDriver(){
+let drivers = JSON.parse(localStorage.getItem("drivers")) || [];
 
-    let name =
-    document.getElementById("driverFullName").value;
+const driverForm = document.getElementById("driverForm");
+const driverTable = document.getElementById("driverTable");
 
-    let phone =
-    document.getElementById("driverPhone").value;
+let editIndex = null;
 
-    let license =
-    document.getElementById("driverLicense").value;
+// SAVE
+function saveDrivers() {
+    localStorage.setItem("drivers", JSON.stringify(drivers));
+}
 
-    let idNumber =
-    document.getElementById("driverIdNumber").value;
+// DISPLAY
+function displayDrivers() {
 
-    if(name === "" || phone === "" || license === "" || idNumber === ""){
+    const search = document
+    .getElementById("searchDriver")
+    .value
+    .toLowerCase();
 
-        alert("Please fill all fields");
+    driverTable.innerHTML = "";
 
-        return;
+    drivers
+    .filter(d =>
+        d.name.toLowerCase().includes(search) ||
+        d.phone.toLowerCase().includes(search) ||
+        d.license.toLowerCase().includes(search)
+    )
+
+    .forEach((d, index) => {
+
+        driverTable.innerHTML += `
+            <tr>
+                <td>${d.name}</td>
+                <td>${d.phone}</td>
+                <td>${d.license}</td>
+
+                <td>
+                    <button onclick="editDriver(${index})">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteDriver(${index})">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+// ADD / UPDATE
+driverForm.addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const driver = {
+
+        name: document.getElementById("driverName").value,
+
+        phone: document.getElementById("driverPhone").value,
+
+        license: document.getElementById("driverLicense").value
+    };
+
+    if(editIndex === null){
+
+        drivers.push(driver);
+
+    } else {
+
+        drivers[editIndex] = driver;
+        editIndex = null;
     }
 
-    let table =
-    document.getElementById("driversTable");
+    saveDrivers();
+    displayDrivers();
 
-    let row =
-    table.insertRow();
+    driverForm.reset();
+});
 
-    row.insertCell(0).innerHTML = name;
-    row.insertCell(1).innerHTML = phone;
-    row.insertCell(2).innerHTML = license;
-    row.insertCell(3).innerHTML = idNumber;
+// DELETE
+function deleteDriver(index){
 
-    document.getElementById("driverFullName").value = "";
-    document.getElementById("driverPhone").value = "";
-    document.getElementById("driverLicense").value = "";
-    document.getElementById("driverIdNumber").value = "";
+    drivers.splice(index, 1);
 
+    saveDrivers();
+    displayDrivers();
 }
+
+// EDIT
+function editDriver(index){
+
+    const d = drivers[index];
+
+    document.getElementById("driverName").value = d.name;
+
+    document.getElementById("driverPhone").value = d.phone;
+
+    document.getElementById("driverLicense").value = d.license;
+
+    editIndex = index;
+}
+
+// SEARCH
+document
+.getElementById("searchDriver")
+.addEventListener("keyup", displayDrivers);
+
+// INIT
+displayDrivers();
 
 </script>
 
