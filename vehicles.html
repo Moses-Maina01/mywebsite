@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Vehicles - Fleet Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Management - Fleet System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -11,6 +12,7 @@
 <!-- SIDEBAR -->
 <div class="sidebar">
     <h2>Fleet System</h2>
+
     <a href="index.html">Dashboard</a>
     <a href="vehicles.html">Vehicles</a>
     <a href="drivers.html">Drivers</a>
@@ -21,33 +23,49 @@
     <a href="login.html">Logout</a>
 </div>
 
-<!-- MAIN CONTENT -->
+<!-- MAIN -->
 <div class="main">
 
     <h1>Vehicle Management</h1>
 
     <!-- FORM -->
     <div class="card">
+
         <h3>Add / Edit Vehicle</h3>
 
         <form id="vehicleForm">
+
             <input type="text" id="vehicleNumber" placeholder="Vehicle Number" required>
+
             <input type="text" id="vehicleModel" placeholder="Vehicle Model" required>
+
             <input type="text" id="vehicleRoute" placeholder="Route" required>
-            <input type="text" id="vehicleStatus" placeholder="Status (Active/Inactive)" required>
+
+            <input type="text" id="vehicleStatus" placeholder="Status" required>
 
             <button type="submit">Save Vehicle</button>
+
         </form>
+
+    </div>
+
+    <!-- SEARCH -->
+    <div class="card">
+
+        <input type="text" id="searchVehicle" placeholder="Search Vehicle...">
+
     </div>
 
     <!-- TABLE -->
     <div class="card">
-        <h3>Vehicle List</h3>
+
+        <h3>Fleet Vehicles</h3>
 
         <table border="1" width="100%">
+
             <thead>
                 <tr>
-                    <th>Number</th>
+                    <th>Vehicle No.</th>
                     <th>Model</th>
                     <th>Route</th>
                     <th>Status</th>
@@ -56,88 +74,167 @@
             </thead>
 
             <tbody id="vehicleTable"></tbody>
+
         </table>
+
     </div>
 
 </div>
 
 <script>
-let vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+
+// PRELOADED FLEET
+let defaultVehicles = [
+
+    {number:"116", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"118", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"119", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"304", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"307", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"308", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"316", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"317", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"581", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"681", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"781", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"951", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"952", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"1045", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"1059", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"1060", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"1061", model:"NQR ISUZU", route:"39", status:"Active"},
+    {number:"1062", model:"NQR ISUZU", route:"39", status:"Active"}
+
+];
+
+// LOAD STORAGE
+let vehicles = JSON.parse(localStorage.getItem("vehicles"));
+
+// FIRST TIME LOAD
+if(!vehicles){
+
+    vehicles = defaultVehicles;
+
+    localStorage.setItem("vehicles", JSON.stringify(vehicles));
+}
 
 const vehicleForm = document.getElementById("vehicleForm");
 const vehicleTable = document.getElementById("vehicleTable");
 
 let editIndex = null;
 
-// SAVE TO STORAGE
-function saveData() {
+// SAVE
+function saveVehicles(){
+
     localStorage.setItem("vehicles", JSON.stringify(vehicles));
 }
 
-// DISPLAY TABLE
-function displayVehicles() {
+// DISPLAY
+function displayVehicles(){
+
+    const search = document
+    .getElementById("searchVehicle")
+    .value
+    .toLowerCase();
+
     vehicleTable.innerHTML = "";
 
-    vehicles.forEach((v, index) => {
+    vehicles
+    .filter(v =>
+        v.number.toLowerCase().includes(search) ||
+        v.model.toLowerCase().includes(search) ||
+        v.route.toLowerCase().includes(search) ||
+        v.status.toLowerCase().includes(search)
+    )
+
+    .forEach((v, index) => {
+
         vehicleTable.innerHTML += `
             <tr>
                 <td>${v.number}</td>
                 <td>${v.model}</td>
                 <td>${v.route}</td>
                 <td>${v.status}</td>
+
                 <td>
-                    <button onclick="editVehicle(${index})">Edit</button>
-                    <button onclick="deleteVehicle(${index})">Delete</button>
+                    <button onclick="editVehicle(${index})">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteVehicle(${index})">
+                        Delete
+                    </button>
                 </td>
             </tr>
         `;
     });
 }
 
-// ADD / UPDATE VEHICLE
-vehicleForm.addEventListener("submit", function(e) {
+// ADD / UPDATE
+vehicleForm.addEventListener("submit", function(e){
+
     e.preventDefault();
 
     const vehicle = {
+
         number: document.getElementById("vehicleNumber").value,
+
         model: document.getElementById("vehicleModel").value,
+
         route: document.getElementById("vehicleRoute").value,
+
         status: document.getElementById("vehicleStatus").value
     };
 
-    if (editIndex === null) {
+    if(editIndex === null){
+
         vehicles.push(vehicle);
+
     } else {
+
         vehicles[editIndex] = vehicle;
         editIndex = null;
     }
 
-    saveData();
+    saveVehicles();
     displayVehicles();
+
     vehicleForm.reset();
 });
 
-// DELETE VEHICLE
-function deleteVehicle(index) {
+// DELETE
+function deleteVehicle(index){
+
     vehicles.splice(index, 1);
-    saveData();
+
+    saveVehicles();
     displayVehicles();
 }
 
-// EDIT VEHICLE
-function editVehicle(index) {
+// EDIT
+function editVehicle(index){
+
     const v = vehicles[index];
 
     document.getElementById("vehicleNumber").value = v.number;
+
     document.getElementById("vehicleModel").value = v.model;
+
     document.getElementById("vehicleRoute").value = v.route;
+
     document.getElementById("vehicleStatus").value = v.status;
 
     editIndex = index;
 }
 
+// SEARCH
+document
+.getElementById("searchVehicle")
+.addEventListener("keyup", displayVehicles);
+
 // INIT
 displayVehicles();
+
 </script>
 
 </body>
