@@ -100,3 +100,42 @@ th,td{
 th{
     background:#f8fafc;
 }
+@media screen and (max-width: 768px) {
+
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        text-align: center;
+    }
+
+    .sidebar a {
+        display: inline-block;
+        margin: 5px;
+        padding: 8px 12px;
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr !important;
+    }
+
+    table {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    input, button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
