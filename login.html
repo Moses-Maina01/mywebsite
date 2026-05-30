@@ -1,65 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fleet Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fleet System Login</title>
 
-    <link rel="stylesheet" href="style.css">
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    /* GREEN + BLUE THEME */
+    background: linear-gradient(135deg, #0ea5e9, #16a34a);
+}
+
+/* LOGIN BOX */
+.login-box{
+    width:360px;
+    background:white;
+    padding:30px;
+    border-radius:14px;
+    box-shadow:0 12px 35px rgba(0,0,0,0.25);
+    border-top:5px solid #16a34a;
+}
+
+/* TITLE */
+.login-box h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#0f172a;
+    font-size:22px;
+}
+
+/* INPUTS */
+.login-box input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    outline:none;
+    transition:0.3s;
+}
+
+.login-box input:focus{
+    border-color:#0ea5e9;
+    box-shadow:0 0 6px rgba(14,165,233,0.4);
+}
+
+/* BUTTON */
+.login-box button{
+    width:100%;
+    padding:12px;
+    background:linear-gradient(90deg, #0ea5e9, #16a34a);
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    margin-top:10px;
+    transition:0.3s;
+}
+
+.login-box button:hover{
+    opacity:0.9;
+    transform:scale(1.02);
+}
+
+/* SMALL TEXT */
+.login-box p{
+    text-align:center;
+    font-size:12px;
+    color:#64748b;
+    margin-top:15px;
+}
+</style>
+
 </head>
 
-<body class="login-body">
+<body>
 
 <div class="login-box">
 
-    <h1>Fleet Login</h1>
+    <h2>Fleet Management System</h2>
 
-    <input type="text"
-    id="username"
-    placeholder="Username">
+    <form onsubmit="login(event)">
 
-    <input type="password"
-    id="password"
-    placeholder="Password">
+        <input type="text" id="username" placeholder="Username" required>
 
-    <button class="login-btn"
-    onclick="login()">
+        <input type="password" id="password" placeholder="Password" required>
 
-        Login
+        <button type="submit">Login</button>
 
-    </button>
+    </form>
 
-    <p id="error-message"></p>
+    <p>Secure Admin Access</p>
 
 </div>
 
 <script>
 
-function login(){
+function login(e){
+    e.preventDefault();
 
-    let username =
-    document.getElementById("username").value;
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
 
-    let password =
-    document.getElementById("password").value;
-
-    // LOGIN DETAILS
-    if(username === "admin" && password === "1234"){
-
-        // SAVE LOGIN
+    if(user === "admin" && pass === "1234"){
         localStorage.setItem("loggedIn", "true");
-
-        // GO TO DASHBOARD
         window.location.href = "index.html";
-
-    }else{
-
-        document.getElementById("error-message").innerHTML =
-        "Wrong username or password";
-
+    } else {
+        alert("Invalid login details");
     }
-
 }
 
 </script>
