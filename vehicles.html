@@ -63,7 +63,9 @@
 </div>
 
 <script>
-
+if (localStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "login.html";
+}
 // DEFAULT DATA
 let defaultVehicles = [
     {number:"116", model:"NQR ISUZU", route:"39", status:"Active"},
