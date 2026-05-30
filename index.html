@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,65 +8,73 @@
 </head>
 
 <body>
+
 <script>
-
 if(localStorage.getItem("loggedIn") !== "true"){
-
     window.location.href = "login.html";
 }
-
 </script>
+
 <!-- SIDEBAR -->
+
 <div class="sidebar">
     <h2>Fleet System</h2>
-    <a href="index.html">Dashboard</a>
-    <a href="vehicles.html">Vehicles</a>
-    <a href="drivers.html">Drivers</a>
-    <a href="revenue.html">Revenue</a>
-    <a href="fuel.html">Fuel</a>
-    <a href="attendance.html">Attendance</a>
-    <a href="reports.html">Reports</a>
-    <a href="admin.html">Admin Panel</a>                                 
-    <a href="login.html">Logout</a>
+
+```
+<a href="index.html">Dashboard</a>
+<a href="vehicles.html">Vehicles</a>
+<a href="drivers.html">Drivers</a>
+<a href="revenue.html">Revenue</a>
+<a href="fuel.html">Fuel</a>
+<a href="attendance.html">Attendance</a>
+<a href="reports.html">Reports</a>
+<a href="admin.html">Admin Panel</a>
+<a href="#" onclick="logout()">Logout</a>
+```
+
 </div>
 
 <!-- MAIN -->
+
 <div class="main">
 
-    <h1>Dashboard Overview</h1>
+```
+<h1>Dashboard Overview</h1>
 
-    <div class="cards">
+<div class="cards">
 
-        <div class="card">
-            <h3>Total Vehicles</h3>
-            <p id="totalVehicles">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Total Drivers</h3>
-            <p id="totalDrivers">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Total Revenue</h3>
-            <p id="totalRevenue">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Total Fuel Cost</h3>
-            <p id="totalFuel">0</p>
-        </div>
-
-        <div class="card">
-            <h3>Net Balance</h3>
-            <p id="netBalance">0</p>
-        </div>
-
+    <div class="card">
+        <h3>Total Vehicles</h3>
+        <p id="totalVehicles">0</p>
     </div>
+
+    <div class="card">
+        <h3>Total Drivers</h3>
+        <p id="totalDrivers">0</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Revenue</h3>
+        <p id="totalRevenue">0</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Fuel Cost</h3>
+        <p id="totalFuel">0</p>
+    </div>
+
+    <div class="card">
+        <h3>Net Balance</h3>
+        <p id="netBalance">0</p>
+    </div>
+
+</div>
+```
 
 </div>
 
 <script>
+
 // LOAD DATA
 let vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
 let drivers = JSON.parse(localStorage.getItem("drivers")) || [];
@@ -86,13 +95,22 @@ let totalFuel = fuel.reduce((sum, item) => {
     return sum + Number(item.cost || 0);
 }, 0);
 
-// NET
+// NET BALANCE
 let net = totalRevenue - totalFuel;
 
 // DISPLAY
 document.getElementById("totalRevenue").innerText = totalRevenue;
 document.getElementById("totalFuel").innerText = totalFuel;
 document.getElementById("netBalance").innerText = net;
+
+// LOGOUT FUNCTION
+function logout(){
+
+    localStorage.removeItem("loggedIn");
+
+    window.location.href = "login.html";
+
+}
 
 </script>
 
