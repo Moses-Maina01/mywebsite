@@ -1,75 +1,186 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard - Fleet System</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fleet Admin Dashboard</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    display:flex;
+    background:#f1f5f9;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:220px;
+    height:100vh;
+    background:linear-gradient(180deg, #0ea5e9, #16a34a);
+    color:white;
+    padding:20px;
+    position:fixed;
+}
+
+.sidebar h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.sidebar a{
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:10px;
+    margin:6px 0;
+    border-radius:6px;
+    transition:0.3s;
+}
+
+.sidebar a:hover{
+    background:rgba(255,255,255,0.2);
+}
+
+/* MAIN */
+.main{
+    margin-left:240px;
+    padding:20px;
+    width:100%;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.header h1{
+    color:#0f172a;
+}
+
+/* CARDS */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    border-left:5px solid #0ea5e9;
+}
+
+.card h3{
+    margin:0;
+    color:#0f172a;
+}
+
+.card p{
+    font-size:22px;
+    margin-top:10px;
+    font-weight:bold;
+    color:#16a34a;
+}
+
+/* QUICK ACTIONS */
+.actions{
+    margin-top:30px;
+}
+
+.actions button{
+    padding:12px 15px;
+    margin-right:10px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    color:white;
+}
+
+.btn-blue{
+    background:#0ea5e9;
+}
+
+.btn-green{
+    background:#16a34a;
+}
+
+.btn-dark{
+    background:#0f172a;
+}
+</style>
+
 </head>
 
 <body>
 
-<script>
-if(localStorage.getItem("loggedIn") !== "true"){
-    window.location.href = "login.html";
-}
-</script>
-
 <!-- SIDEBAR -->
-
 <div class="sidebar">
     <h2>Fleet System</h2>
 
-```
-<a href="index.html">Dashboard</a>
-<a href="vehicles.html">Vehicles</a>
-<a href="drivers.html">Drivers</a>
-<a href="revenue.html">Revenue</a>
-<a href="fuel.html">Fuel</a>
-<a href="attendance.html">Attendance</a>
-<a href="reports.html">Reports</a>
-<a href="admin.html">Admin Panel</a>
-<a href="#" onclick="logout()">Logout</a>
-```
-
+    <a href="index.html">Dashboard</a>
+    <a href="vehicles.html">Vehicles</a>
+    <a href="drivers.html">Drivers</a>
+    <a href="revenue.html">Revenue</a>
+    <a href="fuel.html">Fuel</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="reports.html">Reports</a>
+    <a href="login.html">Logout</a>
 </div>
 
 <!-- MAIN -->
-
 <div class="main">
 
-```
-<h1>Dashboard Overview</h1>
-
-<div class="cards">
-
-    <div class="card">
-        <h3>Total Vehicles</h3>
-        <p id="totalVehicles">0</p>
+    <div class="header">
+        <h1>Admin Dashboard</h1>
     </div>
 
-    <div class="card">
-        <h3>Total Drivers</h3>
-        <p id="totalDrivers">0</p>
+    <!-- CARDS -->
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Vehicles</h3>
+            <p id="totalVehicles">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Drivers</h3>
+            <p id="totalDrivers">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Revenue</h3>
+            <p id="totalRevenue">0</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Fuel Records</h3>
+            <p id="totalFuel">0</p>
+        </div>
+
     </div>
 
-    <div class="card">
-        <h3>Total Revenue</h3>
-        <p id="totalRevenue">0</p>
-    </div>
+    <!-- QUICK ACTIONS -->
+    <div class="actions">
 
-    <div class="card">
-        <h3>Total Fuel Cost</h3>
-        <p id="totalFuel">0</p>
-    </div>
+        <button class="btn-blue" onclick="location.href='vehicles.html'">
+            Manage Vehicles
+        </button>
 
-    <div class="card">
-        <h3>Net Balance</h3>
-        <p id="netBalance">0</p>
-    </div>
+        <button class="btn-green" onclick="location.href='drivers.html'">
+            Manage Drivers
+        </button>
 
-</div>
-```
+        <button class="btn-dark" onclick="location.href='reports.html'">
+            View Reports
+        </button>
+
+    </div>
 
 </div>
 
@@ -81,36 +192,11 @@ let drivers = JSON.parse(localStorage.getItem("drivers")) || [];
 let revenue = JSON.parse(localStorage.getItem("revenue")) || [];
 let fuel = JSON.parse(localStorage.getItem("fuel")) || [];
 
-// CALCULATIONS
+// UPDATE DASHBOARD
 document.getElementById("totalVehicles").innerText = vehicles.length;
 document.getElementById("totalDrivers").innerText = drivers.length;
-
-// SUM REVENUE
-let totalRevenue = revenue.reduce((sum, item) => {
-    return sum + Number(item.amount || 0);
-}, 0);
-
-// SUM FUEL
-let totalFuel = fuel.reduce((sum, item) => {
-    return sum + Number(item.cost || 0);
-}, 0);
-
-// NET BALANCE
-let net = totalRevenue - totalFuel;
-
-// DISPLAY
-document.getElementById("totalRevenue").innerText = totalRevenue;
-document.getElementById("totalFuel").innerText = totalFuel;
-document.getElementById("netBalance").innerText = net;
-
-// LOGOUT FUNCTION
-function logout(){
-
-    localStorage.removeItem("loggedIn");
-
-    window.location.href = "login.html";
-
-}
+document.getElementById("totalRevenue").innerText = revenue.length;
+document.getElementById("totalFuel").innerText = fuel.length;
 
 </script>
 
