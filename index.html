@@ -186,18 +186,27 @@ body{
 
 <script>
 
-// LOAD DATA
-let vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-let drivers = JSON.parse(localStorage.getItem("drivers")) || [];
-let revenue = JSON.parse(localStorage.getItem("revenue")) || [];
-let fuel = JSON.parse(localStorage.getItem("fuel")) || [];
+let vehicles = JSON.parse(localStorage.getItem("vehicles") || "[]");
+let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+let revenue = JSON.parse(localStorage.getItem("revenue") || "[]");
+let fuel = JSON.parse(localStorage.getItem("fuel") || "[]");
 
-// UPDATE DASHBOARD
 document.getElementById("totalVehicles").innerText = vehicles.length;
 document.getElementById("totalDrivers").innerText = drivers.length;
-document.getElementById("totalRevenue").innerText = revenue.length;
-document.getElementById("totalFuel").innerText = fuel.length;
 
+// TOTAL REVENUE
+let totalRevenue = revenue.reduce((sum, item) => {
+    return sum + (Number(item.amount) || 0);
+}, 0);
+
+document.getElementById("totalRevenue").innerText = totalRevenue;
+
+// TOTAL FUEL
+let totalFuel = fuel.reduce((sum, item) => {
+    return sum + (Number(item.liters) || 0);
+}, 0);
+
+document.getElementById("totalFuel").innerText = totalFuel;
 </script>
 
 </body>
