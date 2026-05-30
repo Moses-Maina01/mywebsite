@@ -124,22 +124,29 @@ function displayVehicles() {
 
         if (match) {
 
-            vehicleTable.innerHTML += `
-                <tr>
-                    <td>${v.number}</td>
-                    <td>${v.model}</td>
-                    <td>${v.route}</td>
-                    <td>${v.status}</td>
-                    <td>
-                        <button onclick="editVehicle(${index})">Edit</button>
-                        <button onclick="deleteVehicle(${index})">Delete</button>
-                    </td>
-                </tr>
-            `;
-        }
-    });
+            let statusColor = "orange";
+
+if (v.status.toLowerCase() === "active") {
+    statusColor = "green";
+}
+else if (v.status.toLowerCase() === "breakdown") {
+    statusColor = "red";
 }
 
+vehicleTable.innerHTML += `
+    <tr>
+        <td>${v.number}</td>
+        <td>${v.model}</td>
+        <td>${v.route}</td>
+        <td style="color:${statusColor}; font-weight:bold;">
+            ${v.status}
+        </td>
+        <td>
+            <button onclick="editVehicle(${index})">Edit</button>
+            <button onclick="deleteVehicle(${index})">Delete</button>
+        </td>
+    </tr>
+`;
 // ADD / UPDATE
 vehicleForm.addEventListener("submit", function(e){
     e.preventDefault();
