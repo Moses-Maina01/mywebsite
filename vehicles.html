@@ -9,7 +9,6 @@
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar">
     <h2>Fleet System</h2>
 
@@ -23,46 +22,30 @@
     <a href="login.html">Logout</a>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
     <h1>Vehicle Management</h1>
 
-    <!-- FORM -->
     <div class="card">
-
         <h3>Add / Edit Vehicle</h3>
 
         <form id="vehicleForm">
-
             <input type="text" id="vehicleNumber" placeholder="Vehicle Number" required>
-
             <input type="text" id="vehicleModel" placeholder="Vehicle Model" required>
-
             <input type="text" id="vehicleRoute" placeholder="Route" required>
-
             <input type="text" id="vehicleStatus" placeholder="Status" required>
-
             <button type="submit">Save Vehicle</button>
-
         </form>
-
     </div>
 
-    <!-- SEARCH -->
     <div class="card">
-
         <input type="text" id="searchVehicle" placeholder="Search Vehicle...">
-
     </div>
 
-    <!-- TABLE -->
     <div class="card">
-
         <h3>Fleet Vehicles</h3>
 
         <table border="1" width="100%">
-
             <thead>
                 <tr>
                     <th>Vehicle No.</th>
@@ -74,18 +57,14 @@
             </thead>
 
             <tbody id="vehicleTable"></tbody>
-
         </table>
-
     </div>
 
 </div>
 
 <script>
 
-// PRELOADED FLEET
 let defaultVehicles = [
-
     {number:"116", model:"NQR ISUZU", route:"39", status:"Active"},
     {number:"118", model:"NQR ISUZU", route:"39", status:"Active"},
     {number:"119", model:"NQR ISUZU", route:"39", status:"Active"},
@@ -104,143 +83,107 @@ let defaultVehicles = [
     {number:"1060", model:"NQR ISUZU", route:"39", status:"Active"},
     {number:"1061", model:"NQR ISUZU", route:"39", status:"Active"},
     {number:"1062", model:"NQR ISUZU", route:"39", status:"Active"}
-
 ];
 
-// LOAD STORAGE
-let vehicles = JSON.parse(localStorage.getItem("vehicles"));
+// ✅ SAFE LOAD (FIXED)
+let vehicles = JSON.parse(localStorage.getItem("vehicles") || "null");
 
-// FIRST TIME LOAD
-if(!vehicles){
-
+if (!Array.isArray(vehicles) || vehicles.length === 0) {
     vehicles = defaultVehicles;
-
     localStorage.setItem("vehicles", JSON.stringify(vehicles));
 }
+
+let editIndex = null;
 
 const vehicleForm = document.getElementById("vehicleForm");
 const vehicleTable = document.getElementById("vehicleTable");
 
-let editIndex = null;
-
 // SAVE
-function saveVehicles(){
-
+function saveVehicles() {
     localStorage.setItem("vehicles", JSON.stringify(vehicles));
 }
 
-// DISPLAY
-function displayVehicles(){
+// DISPLAY (FIXED INDEX BUG)
+function displayVehicles() {
 
-    const search = document
-    .getElementById("searchVehicle")
-    .value
-    .toLowerCase();
+    const search = document.getElementById("searchVehicle").value.toLowerCase();
 
     vehicleTable.innerHTML = "";
 
-    vehicles
-    .filter(v =>
+    vehicles.forEach((v, index) => {
 
-        String(v.number).toLowerCase().includes(search) ||
+        if (
+            v.number.toLowerCase().includes(search) ||
+            v.model.toLowerCase().includes(search) ||
+            v.route.toLowerCase().includes(search) ||
+            v.status.toLowerCase().includes(search)
+        ) {
 
-        String(v.model).toLowerCase().includes(search) ||
-
-        String(v.route).toLowerCase().includes(search) ||
-
-        String(v.status).toLowerCase().includes(search)
-
-    )
-
-    .forEach((v, index) => {
-
-        vehicleTable.innerHTML += `
-            <tr>
-                <td>${v.number}</td>
-                <td>${v.model}</td>
-                <td>${v.route}</td>
-                <td>${v.status}</td>
-
-                <td>
-                    <button onclick="editVehicle(${index})">
-                        Edit
-                    </button>
-
-                    <button onclick="deleteVehicle(${index})">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-        `;
-
+            vehicleTable.innerHTML += `
+                <tr>
+                    <td>${v.number}</td>
+                    <td>${v.model}</td>
+                    <td>${v.route}</td>
+                    <td>${v.status}</td>
+                    <td>
+                        <button onclick="editVehicle(${index})">Edit</button>
+                        <button onclick="deleteVehicle(${index})">Delete</button>
+                    </td>
+                </tr>
+            `;
+        }
     });
 }
-// ADD / UPDATE
-vehicleForm.addEventListener("submit", function(e){
 
+// ADD / UPDATE
+vehicleForm.addEventListener("submit", function(e) {
     e.preventDefault();
 
     const vehicle = {
-
         number: document.getElementById("vehicleNumber").value,
-
         model: document.getElementById("vehicleModel").value,
-
         route: document.getElementById("vehicleRoute").value,
-
         status: document.getElementById("vehicleStatus").value
     };
 
-    if(editIndex === null){
-
+    if (editIndex === null) {
         vehicles.push(vehicle);
-
     } else {
-
         vehicles[editIndex] = vehicle;
         editIndex = null;
     }
 
     saveVehicles();
     displayVehicles();
-
     vehicleForm.reset();
 });
 
 // DELETE
-function deleteVehicle(index){
-
+function deleteVehicle(index) {
     vehicles.splice(index, 1);
-
     saveVehicles();
     displayVehicles();
 }
 
 // EDIT
-function editVehicle(index){
-
+function editVehicle(index) {
     const v = vehicles[index];
 
     document.getElementById("vehicleNumber").value = v.number;
-
     document.getElementById("vehicleModel").value = v.model;
-
     document.getElementById("vehicleRoute").value = v.route;
-
     document.getElementById("vehicleStatus").value = v.status;
 
     editIndex = index;
 }
 
 // SEARCH
-document
-.getElementById("searchVehicle")
-.addEventListener("keyup", displayVehicles);
+document.getElementById("searchVehicle").addEventListener("keyup", displayVehicles);
 
 // INIT
-    console.log("Vehicles:", vehicles);
-console.log("Count:", vehicles.length);
 displayVehicles();
+
+console.log("Vehicles loaded:", vehicles);
 
 </script>
 
