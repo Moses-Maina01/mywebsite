@@ -19,7 +19,7 @@
     <a href="fuel.html">Fuel</a>
     <a href="attendance.html">Attendance</a>
     <a href="reports.html">Reports</a>
-    <a href="login.html">Logout</a>
+    <a href="#" onclick="logout()">Logout</a>
 </div>
 
 <div class="main">
@@ -63,10 +63,13 @@
 </div>
 
 <script>
+
+// 🔐 LOGIN PROTECTION
 if (localStorage.getItem("loggedIn") !== "true") {
     window.location.href = "login.html";
 }
-// DEFAULT DATA
+
+// 🚍 DEFAULT VEHICLES
 let defaultVehicles = [
     {number:"116", model:"NQR ISUZU", route:"39", status:"Active"},
     {number:"118", model:"NQR ISUZU", route:"39", status:"Active"},
@@ -88,10 +91,10 @@ let defaultVehicles = [
     {number:"1062", model:"NQR ISUZU", route:"39", status:"Active"}
 ];
 
-// SAFE LOAD
-let vehicles = JSON.parse(localStorage.getItem("vehicles") || "null");
+// 📦 LOAD VEHICLES SAFELY
+let vehicles = JSON.parse(localStorage.getItem("vehicles") || "[]");
 
-if (!Array.isArray(vehicles)) {
+if (!Array.isArray(vehicles) || vehicles.length === 0) {
     vehicles = defaultVehicles;
     localStorage.setItem("vehicles", JSON.stringify(vehicles));
 }
@@ -102,12 +105,12 @@ const vehicleForm = document.getElementById("vehicleForm");
 const vehicleTable = document.getElementById("vehicleTable");
 const searchInput = document.getElementById("searchVehicle");
 
-// SAVE
+// 💾 SAVE
 function saveVehicles() {
     localStorage.setItem("vehicles", JSON.stringify(vehicles));
 }
 
-// RENDER (FIXED: uses real index mapping)
+// 🎨 DISPLAY
 function displayVehicles() {
 
     const search = searchInput.value.toLowerCase();
@@ -126,28 +129,32 @@ function displayVehicles() {
 
             let statusColor = "orange";
 
-if (v.status.toLowerCase() === "active") {
-    statusColor = "green";
-}
-else if (v.status.toLowerCase() === "breakdown") {
-    statusColor = "red";
+            if (v.status.toLowerCase() === "active") {
+                statusColor = "green";
+            }
+            else if (v.status.toLowerCase() === "breakdown") {
+                statusColor = "red";
+            }
+
+            vehicleTable.innerHTML += `
+                <tr>
+                    <td>${v.number}</td>
+                    <td>${v.model}</td>
+                    <td>${v.route}</td>
+                    <td style="color:${statusColor}; font-weight:bold;">
+                        ${v.status}
+                    </td>
+                    <td>
+                        <button onclick="editVehicle(${index})">Edit</button>
+                        <button onclick="deleteVehicle(${index})">Delete</button>
+                    </td>
+                </tr>
+            `;
+        }
+    });
 }
 
-vehicleTable.innerHTML += `
-    <tr>
-        <td>${v.number}</td>
-        <td>${v.model}</td>
-        <td>${v.route}</td>
-        <td style="color:${statusColor}; font-weight:bold;">
-            ${v.status}
-        </td>
-        <td>
-            <button onclick="editVehicle(${index})">Edit</button>
-            <button onclick="deleteVehicle(${index})">Delete</button>
-        </td>
-    </tr>
-`;
-// ADD / UPDATE
+// ➕ ADD / UPDATE
 vehicleForm.addEventListener("submit", function(e){
     e.preventDefault();
 
@@ -170,9 +177,8 @@ vehicleForm.addEventListener("submit", function(e){
     vehicleForm.reset();
 });
 
-// DELETE (FIXED SAFETY)
+// ❌ DELETE
 function deleteVehicle(index) {
-
     if (confirm("Delete this vehicle?")) {
         vehicles.splice(index, 1);
         saveVehicles();
@@ -180,9 +186,8 @@ function deleteVehicle(index) {
     }
 }
 
-// EDIT
+// ✏️ EDIT
 function editVehicle(index) {
-
     const v = vehicles[index];
 
     vehicleNumber.value = v.number;
@@ -193,13 +198,19 @@ function editVehicle(index) {
     editIndex = index;
 }
 
-// SEARCH
+// 🔍 SEARCH
 searchInput.addEventListener("keyup", displayVehicles);
 
-// INIT
+// 🚀 INIT
 displayVehicles();
 
+// 🚪 LOGOUT
+function logout(){
+    localStorage.removeItem("loggedIn");
+    window.location.href = "login.html";
+}
+
 </script>
-<a href="#" onclick="logout()">Logout</a>
+
 </body>
 </html>
