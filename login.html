@@ -107,12 +107,33 @@ body{
 function login(e){
     e.preventDefault();
 
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
 
-    if(user === "admin" && pass === "1234"){
+    let users = JSON.parse(localStorage.getItem("users") || "[]");
+
+    // 🔐 DEFAULT ADMIN LOGIN
+    if (username === "admin" && password === "1234") {
+
         localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("role", "admin");
+
         window.location.href = "index.html";
+        return;
+    }
+
+    // 👤 CHECK CREATED USERS
+    let user = users.find(u =>
+        u.username === username && u.password === password
+    );
+
+    if (user) {
+
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("role", user.role);
+
+        window.location.href = "index.html";
+
     } else {
         alert("Invalid login details");
     }
