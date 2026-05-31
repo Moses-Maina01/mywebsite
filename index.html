@@ -185,7 +185,7 @@ body{
 </div>
 
 <script>
-
+let users = JSON.parse(localStorage.getItem("users") || "[]");
 // 📦 LOAD DATA SAFELY
 let vehicles = JSON.parse(localStorage.getItem("vehicles") || "[]");
 let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
