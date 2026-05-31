@@ -43,7 +43,8 @@
     </div>
 
     <div class="card">
-        <h3>Fleet Vehicles</h3>
+       <h3>Fleet Vehicles</h3>
+<button onclick="exportVehicles()">Export Vehicles</button>
 
         <table>
             <thead>
@@ -203,7 +204,29 @@ searchInput.addEventListener("keyup", displayVehicles);
 
 // 🚀 INIT
 displayVehicles();
+function exportVehicles() {
 
+    let csv = "Vehicle No,Model,Route,Status\n";
+
+    vehicles.forEach(v => {
+        csv += `${v.number},${v.model},${v.route},${v.status}\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "vehicles.csv";
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    window.URL.revokeObjectURL(url);
+}
 // 🚪 LOGOUT
 function logout(){
     localStorage.removeItem("loggedIn");
