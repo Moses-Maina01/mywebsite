@@ -186,27 +186,34 @@ body{
 
 <script>
 
+// 📦 LOAD DATA SAFELY
 let vehicles = JSON.parse(localStorage.getItem("vehicles") || "[]");
 let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
 let revenue = JSON.parse(localStorage.getItem("revenue") || "[]");
-let fuel = JSON.parse(localStorage.getItem("fuel") || "[]");
+let fuel = JSON.parse(localStorage.getItem("fuel") || []);
 
+// 🚍 VEHICLE STATS (optional for later use)
+let activeVehicles = vehicles.filter(v => v.status?.toLowerCase() === "active").length;
+let breakdownVehicles = vehicles.filter(v => v.status?.toLowerCase() === "breakdown").length;
+
+// 📊 BASIC COUNTS
 document.getElementById("totalVehicles").innerText = vehicles.length;
 document.getElementById("totalDrivers").innerText = drivers.length;
 
-// TOTAL REVENUE
+// 💰 TOTAL REVENUE (SUM)
 let totalRevenue = revenue.reduce((sum, item) => {
     return sum + (Number(item.amount) || 0);
 }, 0);
 
 document.getElementById("totalRevenue").innerText = totalRevenue;
 
-// TOTAL FUEL
+// ⛽ TOTAL FUEL (SUM)
 let totalFuel = fuel.reduce((sum, item) => {
     return sum + (Number(item.liters) || 0);
 }, 0);
 
 document.getElementById("totalFuel").innerText = totalFuel;
+
 </script>
 
 </body>
