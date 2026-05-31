@@ -78,7 +78,9 @@
 </div>
 
 <script>
-
+if (localStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "login.html";
+}
 let revenue = JSON.parse(localStorage.getItem("revenue")) || [];
 
 const revenueForm = document.getElementById("revenueForm");
