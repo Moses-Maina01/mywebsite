@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fleet System Login</title>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
 <style>
 body{
     margin:0;
@@ -13,12 +16,9 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-
-    /* GREEN + BLUE THEME */
     background: linear-gradient(135deg, #0ea5e9, #16a34a);
 }
 
-/* LOGIN BOX */
 .login-box{
     width:360px;
     background:white;
@@ -28,15 +28,12 @@ body{
     border-top:5px solid #16a34a;
 }
 
-/* TITLE */
 .login-box h2{
     text-align:center;
     margin-bottom:20px;
     color:#0f172a;
-    font-size:22px;
 }
 
-/* INPUTS */
 .login-box input{
     width:100%;
     padding:12px;
@@ -44,15 +41,12 @@ body{
     border:1px solid #cbd5e1;
     border-radius:8px;
     outline:none;
-    transition:0.3s;
 }
 
 .login-box input:focus{
     border-color:#0ea5e9;
-    box-shadow:0 0 6px rgba(14,165,233,0.4);
 }
 
-/* BUTTON */
 .login-box button{
     width:100%;
     padding:12px;
@@ -63,20 +57,10 @@ body{
     cursor:pointer;
     font-weight:bold;
     margin-top:10px;
-    transition:0.3s;
 }
 
 .login-box button:hover{
     opacity:0.9;
-    transform:scale(1.02);
-}
-
-/* SMALL TEXT */
-.login-box p{
-    text-align:center;
-    font-size:12px;
-    color:#64748b;
-    margin-top:15px;
 }
 </style>
 
@@ -90,7 +74,7 @@ body{
 
     <form onsubmit="login(event)">
 
-        <input type="text" id="username" placeholder="Username" required>
+        <input type="email" id="email" placeholder="Email" required>
 
         <input type="password" id="password" placeholder="Password" required>
 
@@ -98,45 +82,47 @@ body{
 
     </form>
 
-    <p>Secure Admin Access</p>
+    <p style="text-align:center;font-size:12px;color:#64748b;margin-top:15px;">
+        Secure Access System
+    </p>
 
 </div>
 
 <script>
 
+// 🔥 FIREBASE CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyBcrxG-6YtEfj41UpstwdmQ6rD-5QMg0o",
+  authDomain: "fleet-system-96fe5.firebaseapp.com",
+  projectId: "fleet-system-96fe5",
+  storageBucket: "fleet-system-96fe5.appspot.com",
+  messagingSenderId: "690441038472",
+  appId: "1:690441038472:web:86cd0d0b043f0af8908d3d"
+};
+
+// INIT FIREBASE
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// 🔐 LOGIN FUNCTION
 function login(e){
     e.preventDefault();
 
-    let username = document.getElementById("username").value;
+    let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
 
-    let users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    // 🔐 DEFAULT ADMIN LOGIN
-    if (username === "admin" && password === "1234") {
+    auth.signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
 
         localStorage.setItem("loggedIn", "true");
-        localStorage.setItem("role", "admin");
-
-        window.location.href = "index.html";
-        return;
-    }
-
-    // 👤 CHECK CREATED USERS
-    let user = users.find(u =>
-        u.username === username && u.password === password
-    );
-
-    if (user) {
-
-        localStorage.setItem("loggedIn", "true");
-        localStorage.setItem("role", user.role);
+        localStorage.setItem("userEmail", email);
 
         window.location.href = "index.html";
 
-    } else {
-        alert("Invalid login details");
-    }
+    })
+    .catch((error) => {
+        alert("Login failed: " + error.message);
+    });
 }
 
 </script>
