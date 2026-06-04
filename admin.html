@@ -9,53 +9,121 @@
 
 <body>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
+<!-- 🔐 ACCESS CONTROL -->
+<script>
+if(localStorage.getItem("loggedIn") !== "true"){
+    window.location.href = "login.html";
+}
+</script>
 
-        <h2>Fleet System</h2>
+<!-- SIDEBAR -->
+<div class="sidebar">
 
-        <a href="index.html">Dashboard</a>
-        <a href="admin.html">Admin Panel</a>
-        <a href="vehicles.html">Vehicles</a>
-        <a href="drivers.html">Drivers</a>
-        <a href="revenue.html">Revenue</a>
-        <a href="fuel.html">Fuel</a>
-        <a href="attendance.html">Attendance</a>
-        <a href="reports.html">Reports</a>
-        <a href="login.html">Logout</a>
+    <h2>Fleet System</h2>
 
-    </div>
+    <a href="index.html">Dashboard</a>
+    <a href="admin.html">Admin Panel</a>
+    <a href="vehicles.html">Vehicles</a>
+    <a href="drivers.html">Drivers</a>
+    <a href="revenue.html">Revenue</a>
+    <a href="fuel.html">Fuel</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="reports.html">Reports</a>
+    <a href="login.html">Logout</a>
 
-    <!-- MAIN CONTENT -->
-    <div class="main">
+</div>
 
-        <h1>Admin Panel</h1>
+<!-- MAIN CONTENT -->
+<div class="main">
 
-        <div class="cards">
+    <h1>Admin Panel</h1>
 
-            <div class="card">
-                <h3>Total Vehicles</h3>
-                <p>14</p>
-            </div>
+    <!-- STATS -->
+    <div class="cards">
 
-            <div class="card">
-                <h3>Total Drivers</h3>
-                <p>4</p>
-            </div>
+        <div class="card">
+            <h3>Total Vehicles</h3>
+            <p id="vCount">0</p>
+        </div>
 
-            <div class="card">
-                <h3>Active Routes</h3>
-                <p>39 Route</p>
-            </div>
+        <div class="card">
+            <h3>Total Drivers</h3>
+            <p id="dCount">0</p>
+        </div>
 
-            <div class="card">
-                <h3>System Status</h3>
-                <p>ACTIVE</p>
-            </div>
+        <div class="card">
+            <h3>Active Routes</h3>
+            <p>39 Route</p>
+        </div>
 
+        <div class="card">
+            <h3>System Status</h3>
+            <p>ACTIVE</p>
         </div>
 
     </div>
+
+    <!-- 👤 CREATE USER SECTION -->
+    <div class="card" style="margin-top:20px;">
+
+        <h3>Create User</h3>
+
+        <input type="text" id="newUser" placeholder="Username">
+        <input type="password" id="newPass" placeholder="Password">
+
+        <select id="role">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
+
+        <button onclick="addUser()">Create User</button>
+
+        <p id="msg"></p>
+
+    </div>
+
+</div>
+
+<script>
+
+// 📦 LOAD DATA
+let vehicles = JSON.parse(localStorage.getItem("vehicles") || "[]");
+let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+
+// SHOW STATS
+document.getElementById("vCount").innerText = vehicles.length;
+document.getElementById("dCount").innerText = drivers.length;
+
+// 👥 USERS
+let users = JSON.parse(localStorage.getItem("users") || "[]");
+
+// CREATE USER FUNCTION
+function addUser(){
+
+    let username = document.getElementById("newUser").value;
+    let password = document.getElementById("newPass").value;
+    let role = document.getElementById("role").value;
+
+    if(username === "" || password === ""){
+        alert("Fill all fields");
+        return;
+    }
+
+    users.push({
+        username: username,
+        password: password,
+        role: role
+    });
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    document.getElementById("msg").innerText = "User created successfully";
+
+    document.getElementById("newUser").value = "";
+    document.getElementById("newPass").value = "";
+}
+
+</script>
 
 </body>
 </html>
