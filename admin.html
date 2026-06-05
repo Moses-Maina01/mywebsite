@@ -33,7 +33,7 @@ if(localStorage.getItem("loggedIn") !== "true"){
 
 </div>
 
-<!-- MAIN CONTENT -->
+<!-- MAIN -->
 <div class="main">
 
     <h1>Admin Panel</h1>
@@ -52,18 +52,13 @@ if(localStorage.getItem("loggedIn") !== "true"){
         </div>
 
         <div class="card">
-            <h3>Active Routes</h3>
-            <p>39 Route</p>
-        </div>
-
-        <div class="card">
             <h3>System Status</h3>
             <p>ACTIVE</p>
         </div>
 
     </div>
 
-    <!-- 👤 CREATE USER SECTION -->
+    <!-- CREATE USER -->
     <div class="card" style="margin-top:20px;">
 
         <h3>Create User</h3>
@@ -82,6 +77,7 @@ if(localStorage.getItem("loggedIn") !== "true"){
 
     </div>
 
+    <!-- USERS TABLE -->
     <h3>System Users</h3>
 
     <table border="1" width="100%" cellpadding="8">
@@ -97,20 +93,57 @@ if(localStorage.getItem("loggedIn") !== "true"){
 
 </div>
 
+<!-- EDIT POPUP -->
+<div id="editBox" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+">
+
+    <div style="
+        background:white;
+        padding:20px;
+        border-radius:10px;
+        width:300px;
+    ">
+
+        <h3>Edit User</h3>
+
+        <input type="text" id="editUsername" placeholder="Username"><br><br>
+        <input type="password" id="editPassword" placeholder="Password"><br><br>
+
+        <select id="editRole">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select><br><br>
+
+        <button onclick="saveEdit()">Save</button>
+        <button onclick="closeEdit()">Cancel</button>
+
+    </div>
+
+</div>
+
 <script>
 
-// 📦 LOAD DATA
+// 📦 DATA
 let vehicles = JSON.parse(localStorage.getItem("vehicles") || "[]");
 let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
 
-// SHOW STATS
 document.getElementById("vCount").innerText = vehicles.length;
 document.getElementById("dCount").innerText = drivers.length;
 
-// 👥 USERS
+// USERS
 let users = JSON.parse(localStorage.getItem("users") || "[]");
 
-// CREATE USER FUNCTION
+// CREATE USER
 function addUser(){
 
     let username = document.getElementById("newUser").value;
@@ -122,11 +155,7 @@ function addUser(){
         return;
     }
 
-    users.push({
-        username: username,
-        password: password,
-        role: role
-    });
+    users.push({ username, password, role });
 
     localStorage.setItem("users", JSON.stringify(users));
 
@@ -138,7 +167,7 @@ function addUser(){
     loadUsers();
 }
 
-// LOAD USERS TABLE
+// LOAD USERS
 function loadUsers(){
 
     let users = JSON.parse(localStorage.getItem("users") || "[]");
@@ -152,9 +181,8 @@ function loadUsers(){
             <td>${user.username}</td>
             <td>${user.role}</td>
             <td>
-                <button onclick="deleteUser(${index})">
-                    Delete
-                </button>
+                <button onclick="editUser(${index})">Edit</button>
+                <button onclick="deleteUser(${index})">Delete</button>
             </td>
         </tr>`;
     });
@@ -177,7 +205,41 @@ function deleteUser(index){
     }
 }
 
-// 🚀 IMPORTANT: LOAD USERS ON PAGE START
+// EDIT USER
+let editIndex = null;
+
+function editUser(index){
+
+    let users = JSON.parse(localStorage.getItem("users") || "[]");
+
+    editIndex = index;
+
+    document.getElementById("editUsername").value = users[index].username;
+    document.getElementById("editPassword").value = users[index].password;
+    document.getElementById("editRole").value = users[index].role;
+
+    document.getElementById("editBox").style.display = "flex";
+}
+
+function saveEdit(){
+
+    let users = JSON.parse(localStorage.getItem("users") || "[]");
+
+    users[editIndex].username = document.getElementById("editUsername").value;
+    users[editIndex].password = document.getElementById("editPassword").value;
+    users[editIndex].role = document.getElementById("editRole").value;
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    closeEdit();
+    loadUsers();
+}
+
+function closeEdit(){
+    document.getElementById("editBox").style.display = "none";
+}
+
+// INIT
 loadUsers();
 
 </script>
